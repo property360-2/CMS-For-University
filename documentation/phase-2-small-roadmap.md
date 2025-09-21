@@ -1,4 +1,4 @@
-
+Status: Done
 ## **Phase 2: Backend & Database Mini Roadmap**
 
 ### **Goal:**
@@ -36,8 +36,8 @@ DATABASES = {
     }
 }
 ```
-
-* Or use SQLite for **quick testing**:
+<!-- this what i used as of now -->
+* Or use SQLite for **quick testing**: 
 
 ```python
 'ENGINE': 'django.db.backends.sqlite3',

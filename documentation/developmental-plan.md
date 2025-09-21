@@ -3,8 +3,9 @@
 
 ---
 
-## **Phase 1: Research & Planning**
+## **Phase 1: Research & Planning** 
 **Goal:** Understand the project before coding.
+**Status** Done.
 
 1. Study AI/ML capabilities you want (GPT for content generation, layout suggestions).  
 2. Define functional requirements: user roles, page creation, AI prompts, templates, drag-and-drop, SEO.  
@@ -18,11 +19,12 @@
 
 ## **Phase 2: Database & Migrations**
 **Goal:** Set up stable database first.
+**Status** Done.
 
-1. **Install and configure database** (PostgreSQL or MySQL).  
+1. **Install and configure database** (PostgreSQL).  
 2. **Create Python virtual environment** using Anaconda:  
 ```bash
-conda create -n cms python=3.11
+conda create -n cms python
 conda activate cms
 ````
 
