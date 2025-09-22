@@ -1,0 +1,91 @@
+{
+  "info": {
+    "_postman_id": "b8f9e4d2-5f44-4b37-9d9e-7c25d4e7e3c3",
+    "name": "AI CMS Phase 3 Full API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register User",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type","value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"admin1\",\n  \"email\": \"admin1@example.com\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": {"raw":"http://127.0.0.1:8000/api/register/","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["api","register",""]}
+      }
+    },
+    {
+      "name": "Get JWT Token",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type","value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"admin1\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": {"raw":"http://127.0.0.1:8000/api/token/","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["api","token",""]}
+      }
+    },
+    {
+      "name": "Create Page",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type","value": "application/json"},
+          {"key": "Authorization","value": "Bearer {{jwt_token}}"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"University Homepage\",\n  \"slug\": \"university-homepage\",\n  \"user\": 2,\n  \"template\": \"453cfb23-b51a-42e7-8b9e-a92218d14cf0\",\n  \"content_json\": {},\n  \"status\": \"draft\",\n  \"seo_meta\": {}\n}"
+        },
+        "url": {"raw":"http://127.0.0.1:8000/api/pages/","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["api","pages",""]}
+      }
+    },
+    {
+      "name": "Generate AI Content",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type","value": "application/json"},
+          {"key": "Authorization","value": "Bearer {{jwt_token}}"}
+        ],
+        "body": {"mode": "raw","raw": "{\n  \"prompt\": \"Create a homepage for a university website\"\n}"},
+        "url": {"raw":"http://127.0.0.1:8000/api/pages/1/generate_ai_content/","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["api","pages","1","generate_ai_content",""]}
+      }
+    },
+    {
+      "name": "Get Pages",
+      "request": {"method": "GET","header":[{"key":"Authorization","value":"Bearer {{jwt_token}}"}],"url":{"raw":"http://127.0.0.1:8000/api/pages/","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["api","pages",""]}}
+    },
+    {
+      "name": "Get Templates",
+      "request": {"method": "GET","header":[{"key":"Authorization","value":"Bearer {{jwt_token}}"}],"url":{"raw":"http://127.0.0.1:8000/api/templates/","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["api","templates",""]}}
+    },
+    {
+      "name": "Get Elements",
+      "request": {"method": "GET","header":[{"key":"Authorization","value":"Bearer {{jwt_token}}"}],"url":{"raw":"http://127.0.0.1:8000/api/elements/","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["api","elements",""]}}
+    },
+    {
+      "name": "Create Element",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type","value": "application/json"},
+          {"key": "Authorization","value": "Bearer {{jwt_token}}"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Header\",\n  \"type\": \"text\",\n  \"page\": \"1\",\n  \"properties\": {\"text\": \"Welcome to the University\"},\n  \"order\": 1\n}"
+        },
+        "url": {"raw":"http://127.0.0.1:8000/api/elements/","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["api","elements",""]}
+      }
+    },
+    {
+      "name": "Get AI Logs",
+      "request": {"method": "GET","header":[{"key":"Authorization","value":"Bearer {{jwt_token}}"}],"url":{"raw":"http://127.0.0.1:8000/api/ailogs/","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["api","ailogs",""]}}
+    }
+  ]
+}

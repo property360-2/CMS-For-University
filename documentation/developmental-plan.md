@@ -24,7 +24,7 @@
 1. **Install and configure database** (PostgreSQL).  
 2. **Create Python virtual environment** using Anaconda:  
 ```bash
-conda create -n cms python
+conda create -n cms python = 13.5
 conda activate cms
 ````
 

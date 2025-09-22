@@ -81,6 +81,7 @@ class Element(models.Model):
 class AI_Log(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="ai_logs")
+    page = models.ForeignKey(Page, on_delete=models.CASCADE, null=True, blank=True, related_name="ai_logs")
     prompt = models.TextField()
     output_json = models.JSONField()
     model_name = models.CharField(max_length=50)  # e.g., GPT-4
