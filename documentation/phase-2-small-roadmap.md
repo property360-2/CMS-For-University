@@ -1,89 +1,176 @@
-Status: Done
-## **Phase 2: Backend & Database Mini Roadmap**
+---
 
-### **Goal:**
+# **Phase 2: Database & Migrations (Django + JWT Auth)**
 
-Set up your Django backend, database schema, and basic APIs for your AI CMS.
+## **1. Setup Virtual Environment**
+
+Use Conda or venv. (Using Python 3.11 for Django compatibility.)
+
+```bash
+conda create -n cms python=3.11
+conda activate cms
+```
 
 ---
 
-### **1. Setup Django Project**
+## **2. Install Dependencies**
+
+```bash
+pip install django djangorestframework psycopg2-binary djangorestframework-simplejwt
+```
+
+* `django` → main framework
+* `djangorestframework` → REST APIs
+* `psycopg2-binary` → PostgreSQL connector
+* `djangorestframework-simplejwt` → JWT authentication (access/refresh tokens)
+
+---
+
+## **3. Start Project + App**
 
 ```bash
 django-admin startproject cms_project
 cd cms_project
-python manage.py startapp pages
+python manage.py startapp cms_app
 ```
-
-* `cms_project` → main project folder
-* `pages` → app handling Pages, Templates, Elements, AI logs
 
 ---
 
-### **2. Configure Database**
+## **4. Configure Installed Apps**
 
-* In `settings.py`, set your DB (PostgreSQL recommended):
+In `cms_project/settings.py`:
 
 ```python
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cms_db',
-        'USER': 'db_user',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+INSTALLED_APPS = [
+    ...
+    'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',  # for logout/blacklist
+    'cms_app',
+]
+```
+
+---
+
+## **5. REST Framework + JWT Settings**
+
+Also in `settings.py`:
+
+```python
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
 ```
-<!-- this what i used as of now -->
-* Or use SQLite for **quick testing**: 
-
-```python
-'ENGINE': 'django.db.backends.sqlite3',
-'NAME': BASE_DIR / "db.sqlite3",
-```
 
 ---
 
-### **3. Define Models**
+## **6. Define Models (`cms_app/models.py`)**
 
-* Example `pages/models.py`:
+Updated with **no user role**, only single user type:
 
 ```python
 from django.db import models
-from django.contrib.postgres.fields import JSONField  # optional for PostgreSQL
+import uuid
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
-class Page(models.Model):
-    title = models.CharField(max_length=255)
-    content_json = JSONField()
+# Custom User Manager
+class UserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError("Users must have an email address")
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        return self.create_user(email, password, **extra_fields)
+
+# Custom User Model (no role field)
+class User(AbstractBaseUser, PermissionsMixin):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["name"]
+
+    objects = UserManager()
+
+    def __str__(self):
+        return self.email
+
+
 class Template(models.Model):
-    name = models.CharField(max_length=100)
-    layout_json = JSONField()
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    structure = models.JSONField()
+    theme = models.CharField(max_length=100, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class Page(models.Model):
+    STATUS_CHOICES = [
+        ("draft", "draft"),
+        ("published", "published"),
+        ("archived", "archived"),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="pages")
+    template = models.ForeignKey(Template, on_delete=models.SET_NULL, null=True, related_name="pages")
+    title = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True)
+    content_json = models.JSONField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="draft")
+    seo_meta = models.JSONField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 
 class Element(models.Model):
-    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name="elements")
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255)
     type = models.CharField(max_length=50)
-    props = JSONField()
-    order = models.IntegerField()
-```
+    properties = models.JSONField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-* Add **AI logs table** if needed:
 
-```python
-class AI_Log(models.Model):
-    page = models.ForeignKey(Page, on_delete=models.CASCADE)
+class AILog(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="ai_logs")
     prompt = models.TextField()
-    output = models.TextField()
+    output_json = models.JSONField()
+    model_name = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
 ```
 
 ---
 
-### **4. Make & Apply Migrations**
+## **7. Configure Custom User in Settings**
+
+In `cms_project/settings.py`:
+
+```python
+AUTH_USER_MODEL = 'cms_app.User'
+```
+
+---
+
+## **8. Apply Migrations**
+
+Generate and apply DB schema:
 
 ```bash
 python manage.py makemigrations
@@ -92,85 +179,64 @@ python manage.py migrate
 
 ---
 
-### **5. Create Superuser (Admin)**
+## **9. Create Superuser**
 
 ```bash
 python manage.py createsuperuser
 ```
 
-* Allows you to log in at `/admin` and manage pages, templates, elements.
-
 ---
 
-### **6. Setup Basic APIs**
+## **10. JWT Authentication Routes**
 
-* Use Django REST Framework:
-
-```bash
-pip install djangorestframework
-```
-
-* Example `pages/serializers.py`:
+In `cms_project/urls.py`:
 
 ```python
-from rest_framework import serializers
-from .models import Page
+from django.contrib import admin
+from django.urls import path, include
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenBlacklistView,
+)
 
-class PageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Page
-        fields = "__all__"
-```
-
-* Example `pages/views.py`:
-
-```python
-from rest_framework import viewsets
-from .models import Page
-from .serializers import PageSerializer
-
-class PageViewSet(viewsets.ModelViewSet):
-    queryset = Page.objects.all()
-    serializer_class = PageSerializer
-```
-
-* Connect routes in `urls.py`:
-
-```python
-from rest_framework.routers import DefaultRouter
-from .views import PageViewSet
-
-router = DefaultRouter()
-router.register(r'pages', PageViewSet)
-
-urlpatterns = router.urls
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Login
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # Refresh
+    path('api/token/logout/', TokenBlacklistView.as_view(), name='token_blacklist'),  # Logout
+    path('api/', include('cms_app.urls')),  # future app routes
+]
 ```
 
 ---
 
-### **7. Test**
+## **11. Authentication Workflow**
 
-* Run server:
+* **Login (POST)** → `/api/token/`
+  Payload:
 
-```bash
-python manage.py runserver
-```
+  ```json
+  { "email": "admin@example.com", "password": "123456" }
+  ```
 
-* Use **Postman** or browser to test API endpoints:
+  Response:
 
-```
-GET /pages/
-POST /pages/
-```
+  ```json
+  { "access": "xxx", "refresh": "yyy" }
+  ```
 
-* Check admin at `/admin`.
+* **Refresh (POST)** → `/api/token/refresh/`
+  Payload: `{ "refresh": "yyy" }`
 
----
+* **Logout (POST)** → `/api/token/logout/`
+  Payload: `{ "refresh": "yyy" }` → refresh token blacklisted
 
-### **Phase 2 Outcome**
+* **Protected API Call**
+  Add header:
 
-* Database tables are set up (`Page`, `Template`, `Element`, optional `AI_Log`).
-* Basic CRUD API is working.
-* Backend is ready for **AI integration** and frontend drag-and-drop.
+  ```
+  Authorization: Bearer <access_token>
+  ```
 
----
+

@@ -1,211 +1,178 @@
 
----
-
-# **AI-Assisted CMS — Phase 3: Backend & Authentication**
-
-## **Goal**
-
-Implement **CRUD APIs, JWT authentication, and AI content integration** for core models: Pages, Templates, Elements, AI Logs.
+# **Phase 3: Backend Logic (Django REST API + CRUD + JWT Auth)**
 
 ---
 
-## **1. Install Dependencies**
-
-```bash
-pip install djangorestframework djangorestframework-simplejwt
-```
-
----
-
-## **2. Update Settings**
-
-📂 `cms_project/settings.py`
-
-```python
-INSTALLED_APPS = [
-    ...
-    'rest_framework',
-    'rest_framework_simplejwt',
-    'pages',
-]
-
-REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    )
-}
-```
-
----
-
-## **3. Serializers**
-
-📂 `pages/serializers.py`
+## **1. Serializers (`cms_app/serializers.py`)**
 
 ```python
 from rest_framework import serializers
-from django.contrib.auth.models import User
-from .models import Page, Template, Element, AI_Log
+from .models import User, Template, Page, Element, AILog
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
     class Meta:
         model = User
-        fields = ["id", "username", "email"]
+        fields = ['id', 'name', 'email', 'password', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at']
 
-class PageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Page
-        fields = "__all__"
+    def create(self, validated_data):
+        password = validated_data.pop("password", None)
+        user = User(**validated_data)
+        if password:
+            user.set_password(password)
+        user.save()
+        return user
+
 
 class TemplateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Template
-        fields = "__all__"
+        fields = '__all__'
+
+
+class PageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Page
+        fields = '__all__'
+
 
 class ElementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Element
-        fields = "__all__"
+        fields = '__all__'
+
 
 class AILogSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AI_Log
-        fields = "__all__"
+        model = AILog
+        fields = '__all__'
 ```
 
 ---
 
-## **4. Views**
-
-📂 `pages/views.py`
+## **2. Views (`cms_app/views.py`)**
 
 ```python
-from rest_framework import viewsets, status
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from django.contrib.auth.models import User
-from .models import Page, Template, Element, AI_Log
-from .serializers import PageSerializer, TemplateSerializer, ElementSerializer, AILogSerializer, UserSerializer
+from rest_framework import viewsets, permissions
+from django.contrib.auth import get_user_model
+from .models import Template, Page, Element, AILog
+from .serializers import (
+    UserSerializer,
+    TemplateSerializer,
+    PageSerializer,
+    ElementSerializer,
+    AILogSerializer,
+)
 
-# Users (read-only)
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
+User = get_user_model()
+
+# User CRUD
+class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-# Pages CRUD + AI content
-class PageViewSet(viewsets.ModelViewSet):
-    queryset = Page.objects.all()
-    serializer_class = PageSerializer
 
-    @action(detail=True, methods=["post"])
-    def generate_ai_content(self, request, pk=None):
-        page = self.get_object()
-        prompt = request.data.get("prompt", "")
-        ai_output = f"Generated content for: {prompt}"  # mock AI output
-        AI_Log.objects.create(page=page, prompt=prompt, output=ai_output, model_name="mock-model")
-        return Response({"message": "AI content generated", "output": ai_output})
-
+# Template CRUD
 class TemplateViewSet(viewsets.ModelViewSet):
     queryset = Template.objects.all()
     serializer_class = TemplateSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
+
+# Page CRUD
+class PageViewSet(viewsets.ModelViewSet):
+    queryset = Page.objects.all()
+    serializer_class = PageSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+# Element CRUD
 class ElementViewSet(viewsets.ModelViewSet):
     queryset = Element.objects.all()
     serializer_class = ElementSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
+
+# AI Log CRUD
 class AILogViewSet(viewsets.ModelViewSet):
-    queryset = AI_Log.objects.all()
+    queryset = AILog.objects.all()
     serializer_class = AILogSerializer
+    permission_classes = [permissions.IsAuthenticated]
 ```
 
 ---
 
-## **5. Routes**
-
-📂 `pages/urls.py`
+## **3. Routes (`cms_app/urls.py`)**
 
 ```python
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import PageViewSet, TemplateViewSet, ElementViewSet, AILogViewSet, UserViewSet
+from .views import UserViewSet, TemplateViewSet, PageViewSet, ElementViewSet, AILogViewSet
 
 router = DefaultRouter()
-router.register(r'users', UserViewSet)
-router.register(r'pages', PageViewSet)
-router.register(r'templates', TemplateViewSet)
-router.register(r'elements', ElementViewSet)
-router.register(r'ailogs', AILogViewSet)
-
-urlpatterns = router.urls
-```
-
-📂 `cms_project/urls.py`
-
-```python
-from django.contrib import admin
-from django.urls import path, include
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+router.register(r'users', UserViewSet, basename='user')
+router.register(r'templates', TemplateViewSet, basename='template')
+router.register(r'pages', PageViewSet, basename='page')
+router.register(r'elements', ElementViewSet, basename='element')
+router.register(r'ailogs', AILogViewSet, basename='ailog')
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("api/", include("pages.urls")),
-    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path('', include(router.urls)),
 ]
 ```
 
 ---
 
-## **6. Authentication Flow**
+## **4. Available Endpoints**
 
-1. Register users (via admin or API).
-2. Login to get JWT:
+With JWT auth enabled (Phase 2), here’s what you can call:
 
-```http
-POST /api/token/
-{
-  "username": "admin",
-  "password": "password123"
-}
-```
+| Method | Endpoint              | Description       |
+| ------ | --------------------- | ----------------- |
+| POST   | `/api/token/`         | Login, get tokens |
+| POST   | `/api/token/refresh/` | Refresh token     |
+| POST   | `/api/token/logout/`  | Logout/blacklist  |
+| GET    | `/api/users/`         | List users        |
+| POST   | `/api/users/`         | Create user       |
+| GET    | `/api/templates/`     | List templates    |
+| POST   | `/api/templates/`     | Create template   |
+| GET    | `/api/pages/`         | List pages        |
+| POST   | `/api/pages/`         | Create page       |
+| GET    | `/api/elements/`      | List elements     |
+| POST   | `/api/elements/`      | Create element    |
+| GET    | `/api/ailogs/`        | List AI logs      |
+| POST   | `/api/ailogs/`        | Create AI log     |
 
-Response:
-
-```json
-{
-  "access": "jwt-access-token",
-  "refresh": "jwt-refresh-token"
-}
-```
-
-3. Use token for protected endpoints:
-
-```http
-GET /api/pages/
-Authorization: Bearer jwt-access-token
-```
+> ⚠️ All `/api/...` endpoints require `Authorization: Bearer <access_token>` header.
 
 ---
 
-## **7. Testing**
+## **5. Testing Flow**
 
-```bash
-python manage.py runserver
-```
+1. **Create Superuser**
 
-* Test endpoints via Postman:
+   ```bash
+   python manage.py createsuperuser
+   ```
 
-  * `POST /api/token/` → get JWT
-  * `GET /api/pages/` → fetch pages
-  * `POST /api/pages/{id}/generate_ai_content/` → AI content
-* Check `/admin` for users, pages, templates, AI logs management.
+2. **Login (POST → `/api/token/`)**
 
----
+   ```json
+   { "email": "admin@example.com", "password": "123456" }
+   ```
 
-## **Phase 3 Outcome**
+   → returns `{ "access": "xxx", "refresh": "yyy" }`
 
-* Full CRUD APIs for Users, Pages, Templates, Elements, AI Logs.
-* JWT authentication implemented.
-* Mock AI content generation endpoint functional.
-* Backend ready for frontend integration.
+3. **Use Access Token in Headers**
 
----
+   ```
+   Authorization: Bearer xxx
+   ```
+
+4. **Test CRUD** (Users, Templates, Pages, Elements, AILogs)
