@@ -2,7 +2,7 @@
 
 ---
 
-## **Phase 1: Research & Planning** ✅
+## **Phase 1: Research & Planning** ✅ / Done
 
 **Goal:** Understand the project before coding.
 
@@ -19,7 +19,7 @@
 
 ---
 
-## **Phase 2: Database & Migrations** ✅
+## **Phase 2: Database & Migrations** ✅ / Done
 
 **Goal:** Set up stable database first.
 
@@ -36,7 +36,7 @@
 
 ---
 
-## **Phase 3: Backend Logic** ✅
+## **Phase 3: Backend Logic** / Done
 
 **Goal:** Handle API, AI integration, and CRUD operations.
 

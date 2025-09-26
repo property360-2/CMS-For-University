@@ -4,11 +4,11 @@
 
 ## **1. Project Setup**
 
+
 ```bash
-npx create-react-app cms-frontend --template typescript
+npm create vite@latest cms-frontend
 cd cms-frontend
 npm install axios react-router-dom @reduxjs/toolkit react-redux tailwindcss postcss autoprefixer react-dnd @dnd-kit/core
-npx tailwindcss init -p
 ```
 
 **Folder Structure (recommended):**
