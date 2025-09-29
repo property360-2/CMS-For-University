@@ -1,26 +1,40 @@
 {
   "info": {
-    "name": "AI CMS Backend",
-    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-    "description": "Postman collection for AI-Assisted CMS Django Backend (CRUD + JWT Auth).",
+    "name": "AI CMS API",
+    "_postman_id": "abcd1234-5678-90ef-1234-567890abcdef",
+    "description": "Collection for testing AI-Assisted CMS API endpoints with JWT Auth",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Auth - Get Token",
+      "name": "Auth - Register",
       "request": {
         "method": "POST",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "{{base_url}}/api/register/",
+          "host": ["{{base_url}}"],
+          "path": ["api", "register"]
+        },
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"123456\"\n}"
-        },
+          "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Auth - Login (JWT)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
         "url": {
-          "raw": "http://127.0.0.1:8000/api/token/",
-          "protocol": "http",
-          "host": ["127.0.0.1"],
-          "port": "8000",
-          "path": ["api", "token", ""]
+          "raw": "{{base_url}}/api/token/",
+          "host": ["{{base_url}}"],
+          "path": ["api", "token"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
         }
       }
     },
@@ -29,71 +43,14 @@
       "request": {
         "method": "POST",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "{{base_url}}/api/token/refresh/",
+          "host": ["{{base_url}}"],
+          "path": ["api", "token", "refresh"]
+        },
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"refresh\": \"{{refresh_token}}\"\n}"
-        },
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/token/refresh/",
-          "protocol": "http",
-          "host": ["127.0.0.1"],
-          "port": "8000",
-          "path": ["api", "token", "refresh", ""]
-        }
-      }
-    },
-    {
-      "name": "Auth - Logout (Blacklist Token)",
-      "request": {
-        "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"refresh\": \"{{refresh_token}}\"\n}"
-        },
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/token/logout/",
-          "protocol": "http",
-          "host": ["127.0.0.1"],
-          "port": "8000",
-          "path": ["api", "token", "logout", ""]
-        }
-      }
-    },
-    {
-      "name": "Users - List",
-      "request": {
-        "method": "GET",
-        "header": [
-          { "key": "Authorization", "value": "Bearer {{access_token}}" }
-        ],
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/users/",
-          "protocol": "http",
-          "host": ["127.0.0.1"],
-          "port": "8000",
-          "path": ["api", "users", ""]
-        }
-      }
-    },
-    {
-      "name": "Users - Create",
-      "request": {
-        "method": "POST",
-        "header": [
-          { "key": "Authorization", "value": "Bearer {{access_token}}" },
-          { "key": "Content-Type", "value": "application/json" }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"password\": \"123456\"\n}"
-        },
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/users/",
-          "protocol": "http",
-          "host": ["127.0.0.1"],
-          "port": "8000",
-          "path": ["api", "users", ""]
+          "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
         }
       }
     },
@@ -101,15 +58,11 @@
       "name": "Templates - List",
       "request": {
         "method": "GET",
-        "header": [
-          { "key": "Authorization", "value": "Bearer {{access_token}}" }
-        ],
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
         "url": {
-          "raw": "http://127.0.0.1:8000/api/templates/",
-          "protocol": "http",
-          "host": ["127.0.0.1"],
-          "port": "8000",
-          "path": ["api", "templates", ""]
+          "raw": "{{base_url}}/api/templates/",
+          "host": ["{{base_url}}"],
+          "path": ["api", "templates"]
         }
       }
     },
@@ -118,19 +71,17 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{access_token}}" },
-          { "key": "Content-Type", "value": "application/json" }
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
         ],
+        "url": {
+          "raw": "{{base_url}}/api/templates/",
+          "host": ["{{base_url}}"],
+          "path": ["api", "templates"]
+        },
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"name\": \"Homepage\",\n    \"description\": \"Main homepage template\",\n    \"structure\": {\"header\": true, \"footer\": true},\n    \"theme\": \"default\"\n}"
-        },
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/templates/",
-          "protocol": "http",
-          "host": ["127.0.0.1"],
-          "port": "8000",
-          "path": ["api", "templates", ""]
+          "raw": "{\n  \"name\": \"Default Template\",\n  \"description\": \"Basic starter template\",\n  \"structure\": {\"sections\": [\"header\", \"body\", \"footer\"]},\n  \"theme\": \"light\"\n}"
         }
       }
     },
@@ -138,15 +89,11 @@
       "name": "Pages - List",
       "request": {
         "method": "GET",
-        "header": [
-          { "key": "Authorization", "value": "Bearer {{access_token}}" }
-        ],
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
         "url": {
-          "raw": "http://127.0.0.1:8000/api/pages/",
-          "protocol": "http",
-          "host": ["127.0.0.1"],
-          "port": "8000",
-          "path": ["api", "pages", ""]
+          "raw": "{{base_url}}/api/pages/",
+          "host": ["{{base_url}}"],
+          "path": ["api", "pages"]
         }
       }
     },
@@ -155,19 +102,17 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{access_token}}" },
-          { "key": "Content-Type", "value": "application/json" }
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
         ],
+        "url": {
+          "raw": "{{base_url}}/api/pages/",
+          "host": ["{{base_url}}"],
+          "path": ["api", "pages"]
+        },
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"user\": 1,\n    \"template\": 1,\n    \"title\": \"About Us\",\n    \"slug\": \"about-us\",\n    \"content_json\": {\"sections\": [\"intro\", \"history\"]},\n    \"status\": \"Draft\",\n    \"seo_meta\": {\"title\": \"About Us\", \"description\": \"Learn more about us\"}\n}"
-        },
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/pages/",
-          "protocol": "http",
-          "host": ["127.0.0.1"],
-          "port": "8000",
-          "path": ["api", "pages", ""]
+          "raw": "{\n  \"title\": \"Welcome Page\",\n  \"slug\": \"welcome\",\n  \"content_json\": {\"header\": \"Hello World\", \"body\": \"This is a test page\"},\n  \"status\": \"published\",\n  \"seo_meta\": {\"title\": \"Welcome\", \"description\": \"Test page for CMS\"},\n  \"template\": \"<template_uuid>\",\n  \"user\": \"<user_uuid>\"\n}"
         }
       }
     },
@@ -175,15 +120,11 @@
       "name": "Elements - List",
       "request": {
         "method": "GET",
-        "header": [
-          { "key": "Authorization", "value": "Bearer {{access_token}}" }
-        ],
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
         "url": {
-          "raw": "http://127.0.0.1:8000/api/elements/",
-          "protocol": "http",
-          "host": ["127.0.0.1"],
-          "port": "8000",
-          "path": ["api", "elements", ""]
+          "raw": "{{base_url}}/api/elements/",
+          "host": ["{{base_url}}"],
+          "path": ["api", "elements"]
         }
       }
     },
@@ -192,19 +133,17 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{access_token}}" },
-          { "key": "Content-Type", "value": "application/json" }
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
         ],
+        "url": {
+          "raw": "{{base_url}}/api/elements/",
+          "host": ["{{base_url}}"],
+          "path": ["api", "elements"]
+        },
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"name\": \"Button CTA\",\n    \"type\": \"button\",\n    \"properties\": {\"color\": \"blue\", \"text\": \"Click Me\"}\n}"
-        },
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/elements/",
-          "protocol": "http",
-          "host": ["127.0.0.1"],
-          "port": "8000",
-          "path": ["api", "elements", ""]
+          "raw": "{\n  \"name\": \"Header Banner\",\n  \"type\": \"text\",\n  \"properties\": {\"text\": \"Hello CMS!\", \"size\": \"large\"}\n}"
         }
       }
     },
@@ -212,15 +151,11 @@
       "name": "AI Logs - List",
       "request": {
         "method": "GET",
-        "header": [
-          { "key": "Authorization", "value": "Bearer {{access_token}}" }
-        ],
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
         "url": {
-          "raw": "http://127.0.0.1:8000/api/ailogs/",
-          "protocol": "http",
-          "host": ["127.0.0.1"],
-          "port": "8000",
-          "path": ["api", "ailogs", ""]
+          "raw": "{{base_url}}/api/ai-logs/",
+          "host": ["{{base_url}}"],
+          "path": ["api", "ai-logs"]
         }
       }
     },
@@ -229,25 +164,24 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{access_token}}" },
-          { "key": "Content-Type", "value": "application/json" }
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
         ],
+        "url": {
+          "raw": "{{base_url}}/api/ai-logs/",
+          "host": ["{{base_url}}"],
+          "path": ["api", "ai-logs"]
+        },
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"user\": 1,\n    \"prompt\": \"Generate homepage content\",\n    \"output_json\": {\"sections\": [\"hero\", \"features\"]},\n    \"model_name\": \"gpt-4\"\n}"
-        },
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/ailogs/",
-          "protocol": "http",
-          "host": ["127.0.0.1"],
-          "port": "8000",
-          "path": ["api", "ailogs", ""]
+          "raw": "{\n  \"user\": \"<user_uuid>\",\n  \"prompt\": \"Generate homepage text\",\n  \"output_json\": {\"text\": \"Welcome to our AI CMS\"},\n  \"model_name\": \"gpt-4\"\n}"
         }
       }
     }
   ],
   "variable": [
-    { "key": "access_token", "value": "" },
+    { "key": "base_url", "value": "http://127.0.0.1:8000" },
+    { "key": "token", "value": "" },
     { "key": "refresh_token", "value": "" }
   ]
 }
