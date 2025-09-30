@@ -1,79 +1,69 @@
-# AI-Assisted CMS Data Dictionary
-
-## **1. Users Table**
-
-| Column     | Type       | Description                     |
-| ---------- | ---------- | ------------------------------- |
-| id         | UUID / int | Primary key                     |
-| name       | varchar    | Full name                       |
-| email      | varchar    | Unique user email               |
-| password   | varchar    | Hashed password                 |
-| created_at | datetime   | Timestamp of creation           |
-| updated_at | datetime   | Timestamp of last update        |
+# **Data Dictionary for Section-Based School CMS**
 
 ---
 
-## **2. Templates Table**
+## **1. User**
 
-| Column      | Type     | Description                                 |
-| ----------- | -------- | ------------------------------------------- |
-| id          | UUID/int | Primary key                                 |
-| name        | varchar  | Template name                               |
-| description | text     | Optional description                        |
-| structure   | JSON     | Layout info (sections, elements, positions) |
-| theme       | varchar  | Theme name or color scheme                  |
-| created_at  | datetime | Timestamp of creation                       |
-| updated_at  | datetime | Timestamp of last update                    |
-
----
-
-## **3. Pages Table**
-
-| Column       | Type              | Description                                |
-| ------------ | ----------------- | ------------------------------------------ |
-| id           | UUID/int          | Primary key                                |
-| user_id      | FK → Users.id     | Creator/owner of page                      |
-| template_id  | FK → Templates.id | Base template used                         |
-| title        | varchar           | Page title                                 |
-| slug         | varchar           | SEO-friendly URL slug                      |
-| content_json | JSON              | AI-generated content and drag-drop layout  |
-| status       | varchar           | Draft / Published / Archived               |
-| seo_meta     | JSON              | SEO metadata: title, description, keywords |
-| created_at   | datetime          | Timestamp of creation                      |
-| updated_at   | datetime          | Timestamp of last update                   |
+| Field      | Type           | Description                 | Notes                      |
+| ---------- | -------------- | --------------------------- | -------------------------- |
+| id         | UUID           | Primary key                 | Unique identifier for user |
+| name       | CharField(255) | Full name of user           |                            |
+| email      | EmailField     | User's email                | Unique, used for login     |
+| is_staff   | Boolean        | Admin/staff flag            | Default False              |
+| created_at | DateTime       | Timestamp when user created | Auto now add               |
+| updated_at | DateTime       | Timestamp when user updated | Auto now                   |
 
 ---
 
-## **4. Elements Table (optional)**
+## **2. Template**
 
-| Column     | Type     | Description                                             |
-| ---------- | -------- | ------------------------------------------------------- |
-| id         | UUID/int | Primary key                                             |
-| name       | varchar  | Element name                                            |
-| type       | varchar  | Type: text, image, button, etc.                         |
-| properties | JSON     | JSON with element properties (size, color, text, links) |
-| created_at | datetime | Timestamp of creation                                   |
-| updated_at | datetime | Timestamp of last update                                |
-
----
-
-## **5. AI_Logs Table (optional)**
-
-| Column      | Type          | Description                 |
-| ----------- | ------------- | --------------------------- |
-| id          | UUID/int      | Primary key                 |
-| user_id     | FK → Users.id | Who requested AI            |
-| prompt      | text          | AI input from user          |
-| output_json | JSON          | AI-generated content        |
-| model_name  | varchar       | AI model used (e.g., GPT-4) |
-| created_at  | datetime      | Timestamp of request        |
+| Field       | Type           | Description                     | Notes                           |
+| ----------- | -------------- | ------------------------------- | ------------------------------- |
+| id          | UUID           | Primary key                     | Unique identifier for template  |
+| name        | CharField(255) | Template name                   |                                 |
+| description | TextField      | Template description            | Optional                        |
+| structure   | JSONField      | Default sections for pages      | Stores array of section objects |
+| theme       | CharField(100) | Theme key or name               | Determines page styling         |
+| created_at  | DateTime       | Timestamp when template created | Auto now add                    |
+| updated_at  | DateTime       | Timestamp when template updated | Auto now                        |
 
 ---
 
-## **Notes**
+## **3. Page**
 
-- **JSON fields** (Pages.content_json, Templates.structure, Elements.properties, AI_Logs.output_json) allow **flexible layouts and AI-generated content** without schema changes.
-- **Users → Pages** is **1-to-many**.
-- **Templates → Pages** is **1-to-many**.
-- Optional tables (**Elements, AI_Logs**) provide modular features without affecting core Pages structure.
-- SEO and accessibility considerations are included via `seo_meta` in Pages.
+| Field       | Type                 | Description                 | Notes                        |
+| ----------- | -------------------- | --------------------------- | ---------------------------- |
+| id          | UUID                 | Primary key                 | Unique identifier for page   |
+| user_id     | ForeignKey(User)     | Owner of page               | On delete cascade            |
+| template_id | ForeignKey(Template) | Template used for page      | Nullable, on delete set null |
+| title       | CharField(255)       | Page title                  |                              |
+| slug        | SlugField            | URL-friendly identifier     | Unique                       |
+| status      | CharField(20)        | Draft/Published             | Default draft                |
+| seo_meta    | JSONField            | SEO metadata                | Optional, stores meta tags   |
+| created_at  | DateTime             | Timestamp when page created | Auto now add                 |
+| updated_at  | DateTime             | Timestamp when page updated | Auto now                     |
+
+---
+
+## **4. Section**
+
+| Field      | Type             | Description                    | Notes                                                  |
+| ---------- | ---------------- | ------------------------------ | ------------------------------------------------------ |
+| id         | UUID             | Primary key                    | Unique identifier for section                          |
+| page_id    | ForeignKey(Page) | Page this section belongs to   | On delete cascade                                      |
+| type       | CharField(50)    | Section type                   | e.g., heading, paragraph, table, button, image         |
+| properties | JSONField        | Section content/properties     | Stores text, table rows, image URLs, button text, etc. |
+| theme_key  | CharField(50)    | Optional theme override        | Overrides template theme if needed                     |
+| order      | PositiveInteger  | Section order in page          | Determines rendering sequence                          |
+| created_at | DateTime         | Timestamp when section created | Auto now add                                           |
+| updated_at | DateTime         | Timestamp when section updated | Auto now                                               |
+
+---
+
+### **Notes:**
+
+* **User → Page**: One-to-many relationship, user owns pages.
+* **Template → Page**: One-to-many, template provides layout and theme.
+* **Page → Section**: One-to-many, sections are ordered building blocks of page content.
+* **Sections inherit template/theme** unless `theme_key` is set for override.
+* **JSONFields** allow flexible storage of dynamic content per se

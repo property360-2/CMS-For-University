@@ -1,158 +1,139 @@
-# **AI-Assisted CMS: Developmental Plan (Python/Django)**
+# **Section-Based CMS Developmental Plan (Phase-by-Phase)**
 
 ---
 
 ## **Phase 1: Research & Planning** ✅ / Done
 
-**Goal:** Understand the project before coding.
+**Goal:** Define system structure, templates, sections, and workflow before coding.
 
 **Tasks:**
 
-1. Study AI/ML capabilities you want (GPT for content generation, layout suggestions).
-2. Define functional requirements: user roles, page creation, AI prompts, templates, drag-and-drop, SEO.
-3. Finalize **database schema** (use your data dictionary).
-4. Choose tech stack:
-
-   * Backend: Django (recommended) or Flask
-   * AI: OpenAI API or HuggingFace Transformers
-   * Frontend: React + TypeScript (TSX), optional Next.js for SEO
+1. Review requirements: dynamic content + static design + templates/themes.
+2. Define page & section types (heading, paragraph, table, button, image).
+3. Decide database schema (User, Template, Page, Section).
+4. Finalize tech stack: Django REST Framework, PostgreSQL, React + TSX, Tailwind + shadcn/ui.
+5. Prepare data dictionary and ERD.
 
 ---
 
-## **Phase 2: Database & Migrations** ✅ / Done
+## **Phase 2: Database & Migrations** ✅ / in progress again
 
-**Goal:** Set up stable database first.
+**Goal:** Build a stable DB structure for pages, templates, sections.
 
 **Tasks:**
 
-1. Install and configure PostgreSQL.
-2. Create Python virtual environment (Anaconda).
-3. Install Django + REST framework.
-4. Initialize Django project and app.
-5. Define models in `models.py` (Users, Pages, Templates, Elements, AI\_Logs).
-6. Create migrations.
-7. Apply migrations.
-8. Create superuser for admin testing (optional).
+1. Install PostgreSQL and create virtual environment.
+2. Initialize Django project and app.
+3. Define models (`User`, `Template`, `Page`, `Section`).
+4. Create and apply migrations.
+5. Create superuser for testing.
 
 ---
 
-## **Phase 3: Backend Logic** / Done
+## **Phase 3: Backend APIs & CRUD**
 
-**Goal:** Handle API, AI integration, and CRUD operations.
+**Goal:** Enable full CRUD operations and frontend connectivity.
 
 **Tasks:**
 
-1. Create serializers (`serializers.py`) for converting models to JSON.
-2. Create views (`views.py`) for CRUD and AI integration.
-3. Create routes (`urls.py`).
-4. Test APIs (Postman, HTTPie).
-5. Review & update models/serializers/views if needed.
+1. Create serializers (`serializers.py`) for all models.
+2. Implement viewsets / class-based views for API endpoints.
+3. Setup URL routing (`urls.py`).
+4. Implement authentication (JWT or Django auth).
+5. Test all API endpoints (Postman/HTTPie).
 
 ---
 
-## **Phase 4: Frontend MVP**
+## **Phase 4: Template & Theme System**
 
-**Goal:** Build a working frontend with core features.
+**Goal:** Provide static design and consistent styling for pages.
 
 **Tasks:**
 
-1. Implement login & JWT authentication.
-2. Build basic dashboard layout.
-3. Add CRUD UI for Users, Templates, Pages, and Elements.
-4. Implement simple page editor (drag-and-drop MVP).
-5. Connect frontend to backend APIs (axios/fetch).
-6. Display AI-generated content on pages.
+1. Create Template model structure with `theme` field.
+2. Define JSON structure for default sections.
+3. Implement frontend mapping of `theme_key` to Tailwind classes.
+4. Create at least 2 sample templates with different themes for testing.
 
 ---
 
-## **Phase 5: Optimization (Backend + Frontend)**
+## **Phase 5: Section Rendering System**
 
-**Goal:** Improve performance and stability.
+**Goal:** Render dynamic content using JSON and shadcn/ui components.
 
 **Tasks:**
 
-1. Optimize database queries and ORM usage.
-2. Add pagination, filtering, and search.
-3. Improve frontend state management (Redux/Zustand).
-4. Secure APIs with permissions, throttling, and validation.
-5. Implement error handling, loading states, and caching.
+1. Implement SectionRenderer in React.
+2. Map section types (`heading`, `paragraph`, `table`, `button`, `image`) to components.
+3. Apply template theme or `theme_key` overrides.
+4. Test dynamic rendering with example pages and sections.
 
 ---
 
-## **Phase 6: UX & UI Improvements**
+## **Phase 6: Page Creation & Editing UI**
 
-**Goal:** Enhance usability and design.
+**Goal:** Build frontend interface for creating and editing pages.
 
 **Tasks:**
 
-1. Apply Tailwind CSS or Material UI styling.
-2. Improve drag-and-drop editor UX (snapping, preview).
-3. Add better navigation (sidebar, modals, breadcrumbs).
-4. Ensure accessibility (ARIA roles, keyboard navigation).
-5. Add theme options (e.g., dark mode).
+1. Fetch templates and display them for selection.
+2. Add/edit/delete/reorder sections in the frontend.
+3. Implement live preview of page rendering.
+4. Connect frontend changes to backend APIs (create/update page & sections).
+5. Handle validation and errors.
 
 ---
 
-## **Phase 7: Testing & QA**
+## **Phase 7: SEO & Accessibility**
 
-**Goal:** Ensure system stability and fix bugs.
+**Goal:** Ensure pages are discoverable and usable.
 
 **Tasks:**
 
-1. Write unit tests (Django + Pytest, React Testing Library).
-2. Run API integration tests (pytest-drf, Postman).
-3. Conduct manual QA across browsers and devices.
-4. Fix bugs and polish workflows.
+1. Implement meta tags (title, description) from page metadata.
+2. Ensure semantic HTML for headings, tables, lists, buttons.
+3. Implement ARIA roles and keyboard navigation support.
+4. Test responsiveness on mobile and desktop.
+5. Optimize image rendering and lazy load where necessary.
 
 ---
 
-## **Phase 8: SEO Optimization**
+## **Phase 8: Testing & QA**
 
-**Goal:** Improve discoverability and performance.
+**Goal:** Ensure system is stable, bug-free, and UX is smooth.
 
 **Tasks:**
 
-1. Auto-generate meta tags and descriptions (AI-assisted).
-2. Generate sitemaps automatically.
-3. Add structured data (schema.org).
-4. Optimize page load (lazy loading, image compression).
-5. Add optional SSR with Next.js for better SEO.
+1. Write unit tests for backend models and serializers.
+2. Write integration tests for API endpoints.
+3. Test frontend rendering of sections with various templates.
+4. Conduct cross-browser testing.
+5. Fix bugs and refine UI/UX.
 
 ---
 
-## **Phase 9: Deployment**
+## **Phase 9: Deployment & Monitoring**
 
-**Goal:** Publish CMS for production use.
+**Goal:** Publish CMS and ensure it runs smoothly.
 
 **Tasks:**
 
 1. Containerize backend with Docker.
-2. Deploy backend + database (AWS/GCP/Heroku).
+2. Deploy backend + DB (AWS/GCP/Heroku).
 3. Deploy frontend (Vercel/Netlify).
-4. Setup CI/CD pipeline (GitHub Actions, GitLab CI).
-5. Add monitoring and logging (Sentry, Prometheus, Grafana).
+4. Setup CI/CD pipelines (GitHub Actions/GitLab CI).
+5. Add basic monitoring (Sentry, logs) and error handling.
 
 ---
 
-## **Python/Django Equivalents to Laravel**
+## **Phase 10: Optional Enhancements**
 
-| Laravel          | Python/Django                             |
-| ---------------- | ----------------------------------------- |
-| Migration        | `makemigrations` + `migrate`              |
-| Model            | `models.py` classes                       |
-| Controller       | `views.py` functions or class-based views |
-| Route            | `urls.py`                                 |
-| API Testing      | Postman / HTTPie                          |
-| Seeder / Factory | Django fixtures or scripts                |
+**Goal:** Future-proof the CMS for new features.
 
----
+**Tasks:**
 
-## **Notes**
-
-* Always use **migrations** to keep schema consistent and versioned.
-* Start with **core tables** (Users, Pages, Templates, Elements, AI\_Logs).
-* Follow **phase-by-phase workflow** to avoid confusion.
-* Test backend APIs before frontend integration.
-
----
-
+1. Media library (images/videos for sections).
+2. Page versioning and rollback.
+3. Section-level theme overrides.
+4. Multi-language support.
+5. Multi-user roles and permissions.
