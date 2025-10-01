@@ -16,7 +16,7 @@
 
 ---
 
-## **Phase 2: Database & Migrations** ✅ / in progress again
+## **Phase 2: Database & Migrations** 
 
 **Goal:** Build a stable DB structure for pages, templates, sections.
 
