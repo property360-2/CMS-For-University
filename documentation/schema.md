@@ -4,14 +4,16 @@
 
 ## **1. User**
 
-| Field      | Type           | Description                 | Notes                      |
-| ---------- | -------------- | --------------------------- | -------------------------- |
-| id         | UUID           | Primary key                 | Unique identifier for user |
-| name       | CharField(255) | Full name of user           |                            |
-| email      | EmailField     | User's email                | Unique, used for login     |
-| is_staff   | Boolean        | Admin/staff flag            | Default False              |
-| created_at | DateTime       | Timestamp when user created | Auto now add               |
-| updated_at | DateTime       | Timestamp when user updated | Auto now                   |
+| Field      | Type           | Description                 | Notes                                         |
+| ---------- | -------------- | --------------------------- | --------------------------------------------- |
+| id         | UUID           | Primary key                 | Unique identifier for user                    |
+| name       | CharField(255) | Full name of user           |                                               |
+| email      | EmailField     | User's email                | Unique, used for login                        |
+| password   | CharField(128) | Hashed password             | Stored securely via Django’s `set_password()` |
+| is_staff   | Boolean        | Admin/staff flag            | Default False                                 |
+| is_active  | Boolean        | Account active flag         | Default True (can disable user)               |
+| created_at | DateTime       | Timestamp when user created | Auto now add                                  |
+| updated_at | DateTime       | Timestamp when user updated | Auto now                                      |
 
 ---
 
