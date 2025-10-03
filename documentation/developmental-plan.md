@@ -42,6 +42,16 @@
 4. Implement authentication (JWT or Django auth).
 5. Test all API endpoints (Postman/HTTPie).
 
+
+todo : 📝 TODO (next steps)
+
+ Test API endpoints via Postman/Thunder Client (/api/users/, /api/pages/, /api/sections/)
+
+ Verify JWT login with admin@gmail.com / 1234
+
+ Add more seed data (Admissions, Contact Us pages)
+
+ Prepare 1–2 additional templates with different themes (Phase 4 kickoff)
 ---
 
 ## **Phase 4: Template & Theme System**

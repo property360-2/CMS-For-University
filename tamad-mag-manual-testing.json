@@ -1,187 +1,212 @@
 {
   "info": {
-    "name": "AI CMS API",
-    "_postman_id": "abcd1234-5678-90ef-1234-567890abcdef",
-    "description": "Collection for testing AI-Assisted CMS API endpoints with JWT Auth",
+    "name": "Section-Based CMS Full Testing",
+    "_postman_id": "cms-full-testing",
+    "description": "Full testing collection for CMS backend Phases 1–4",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Auth - Register",
+      "name": "Register User",
       "request": {
         "method": "POST",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "url": {
-          "raw": "{{base_url}}/api/register/",
-          "host": ["{{base_url}}"],
-          "path": ["api", "register"]
-        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+          "raw": "{\n  \"name\": \"Admin User\",\n  \"email\": \"admin@example.com\",\n  \"password\": \"1234\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/register/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "register", ""]
         }
       }
     },
     {
-      "name": "Auth - Login (JWT)",
+      "name": "Login (JWT Token)",
       "request": {
         "method": "POST",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "url": {
-          "raw": "{{base_url}}/api/token/",
-          "host": ["{{base_url}}"],
-          "path": ["api", "token"]
-        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+          "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"1234\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/token/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "token", ""]
         }
       }
     },
     {
-      "name": "Auth - Refresh Token",
+      "name": "Refresh JWT Token",
       "request": {
         "method": "POST",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "url": {
-          "raw": "{{base_url}}/api/token/refresh/",
-          "host": ["{{base_url}}"],
-          "path": ["api", "token", "refresh"]
-        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
-        }
-      }
-    },
-    {
-      "name": "Templates - List",
-      "request": {
-        "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+          "raw": "{\n  \"refresh\": \"<refresh_token_here>\"\n}"
+        },
         "url": {
-          "raw": "{{base_url}}/api/templates/",
-          "host": ["{{base_url}}"],
-          "path": ["api", "templates"]
+          "raw": "http://localhost:8000/api/token/refresh/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "token", "refresh", ""]
         }
       }
     },
     {
-      "name": "Templates - Create",
+      "name": "Create Template",
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" },
-          { "key": "Authorization", "value": "Bearer {{token}}" }
+          { "key": "Authorization", "value": "Bearer <access_token>" },
+          { "key": "Content-Type", "value": "application/json" }
         ],
-        "url": {
-          "raw": "{{base_url}}/api/templates/",
-          "host": ["{{base_url}}"],
-          "path": ["api", "templates"]
-        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"Default Template\",\n  \"description\": \"Basic starter template\",\n  \"structure\": {\"sections\": [\"header\", \"body\", \"footer\"]},\n  \"theme\": \"light\"\n}"
+          "raw": "{\n  \"name\": \"Admissions Template\",\n  \"description\": \"Template for admissions page\",\n  \"structure\": [\n    {\"type\": \"heading\", \"properties\": {\"text\": \"Welcome to Admissions\"}},\n    {\"type\": \"paragraph\", \"properties\": {\"text\": \"Please fill in your details.\"}},\n    {\"type\": \"button\", \"properties\": {\"text\": \"Apply Now\", \"url\": \"/apply\"}}\n  ],\n  \"theme\": \"default\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/templates/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "templates", ""]
         }
       }
     },
     {
-      "name": "Pages - List",
+      "name": "List Templates",
       "request": {
         "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "header": [
+          { "key": "Authorization", "value": "Bearer <access_token>" }
+        ],
         "url": {
-          "raw": "{{base_url}}/api/pages/",
-          "host": ["{{base_url}}"],
-          "path": ["api", "pages"]
+          "raw": "http://localhost:8000/api/templates/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "templates", ""]
         }
       }
     },
     {
-      "name": "Pages - Create",
+      "name": "Create Page from Template",
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" },
-          { "key": "Authorization", "value": "Bearer {{token}}" }
+          { "key": "Authorization", "value": "Bearer <access_token>" },
+          { "key": "Content-Type", "value": "application/json" }
         ],
-        "url": {
-          "raw": "{{base_url}}/api/pages/",
-          "host": ["{{base_url}}"],
-          "path": ["api", "pages"]
-        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"title\": \"Welcome Page\",\n  \"slug\": \"welcome\",\n  \"content_json\": {\"header\": \"Hello World\", \"body\": \"This is a test page\"},\n  \"status\": \"published\",\n  \"seo_meta\": {\"title\": \"Welcome\", \"description\": \"Test page for CMS\"},\n  \"template\": \"<template_uuid>\",\n  \"user\": \"<user_uuid>\"\n}"
+          "raw": "{\n  \"title\": \"Admissions Page 2025\",\n  \"slug\": \"admissions-2025\",\n  \"template\": \"<template_uuid_here>\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pages/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pages", ""]
         }
       }
     },
     {
-      "name": "Elements - List",
+      "name": "List Pages",
       "request": {
         "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "header": [
+          { "key": "Authorization", "value": "Bearer <access_token>" }
+        ],
         "url": {
-          "raw": "{{base_url}}/api/elements/",
-          "host": ["{{base_url}}"],
-          "path": ["api", "elements"]
+          "raw": "http://localhost:8000/api/pages/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pages", ""]
         }
       }
     },
     {
-      "name": "Elements - Create",
+      "name": "List Sections for Page",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer <access_token>" }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/sections/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "sections", ""]
+        }
+      }
+    },
+    {
+      "name": "Add Section Manually",
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" },
-          { "key": "Authorization", "value": "Bearer {{token}}" }
+          { "key": "Authorization", "value": "Bearer <access_token>" },
+          { "key": "Content-Type", "value": "application/json" }
         ],
-        "url": {
-          "raw": "{{base_url}}/api/elements/",
-          "host": ["{{base_url}}"],
-          "path": ["api", "elements"]
-        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"Header Banner\",\n  \"type\": \"text\",\n  \"properties\": {\"text\": \"Hello CMS!\", \"size\": \"large\"}\n}"
-        }
-      }
-    },
-    {
-      "name": "AI Logs - List",
-      "request": {
-        "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+          "raw": "{\n  \"page\": \"<page_uuid_here>\",\n  \"type\": \"paragraph\",\n  \"properties\": {\"text\": \"Extra section text\"},\n  \"order\": 4\n}"
+        },
         "url": {
-          "raw": "{{base_url}}/api/ai-logs/",
-          "host": ["{{base_url}}"],
-          "path": ["api", "ai-logs"]
+          "raw": "http://localhost:8000/api/sections/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "sections", ""]
         }
       }
     },
     {
-      "name": "AI Logs - Create",
+      "name": "Update Section",
       "request": {
-        "method": "POST",
+        "method": "PUT",
         "header": [
-          { "key": "Content-Type", "value": "application/json" },
-          { "key": "Authorization", "value": "Bearer {{token}}" }
+          { "key": "Authorization", "value": "Bearer <access_token>" },
+          { "key": "Content-Type", "value": "application/json" }
         ],
-        "url": {
-          "raw": "{{base_url}}/api/ai-logs/",
-          "host": ["{{base_url}}"],
-          "path": ["api", "ai-logs"]
-        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"user\": \"<user_uuid>\",\n  \"prompt\": \"Generate homepage text\",\n  \"output_json\": {\"text\": \"Welcome to our AI CMS\"},\n  \"model_name\": \"gpt-4\"\n}"
+          "raw": "{\n  \"properties\": {\"text\": \"Updated section text\"}\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/sections/<section_uuid_here>/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "sections", "<section_uuid_here>"]
+        }
+      }
+    },
+    {
+      "name": "Delete Section",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Authorization", "value": "Bearer <access_token>" }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/sections/<section_uuid_here>/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "sections", "<section_uuid_here>"]
         }
       }
     }
-  ],
-  "variable": [
-    { "key": "base_url", "value": "http://127.0.0.1:8000" },
-    { "key": "token", "value": "" },
-    { "key": "refresh_token", "value": "" }
   ]
 }

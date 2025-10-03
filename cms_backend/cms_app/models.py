@@ -1,10 +1,10 @@
 import uuid
 from django.db import models
-
-import uuid
-from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
+# -----------------------------
+# User Manager
+# -----------------------------
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -26,7 +26,9 @@ class UserManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
-
+# -----------------------------
+# User Model
+# -----------------------------
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
@@ -45,22 +47,30 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
+# -----------------------------
+# Template Model
+# -----------------------------
+THEME_CHOICES = [
+    ('default', 'Default'),
+    ('light', 'Light'),
+    ('dark', 'Dark'),
+]
 
-# 2. Template Model
 class Template(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     structure = models.JSONField()  # stores default sections
-    theme = models.CharField(max_length=100)
+    theme = models.CharField(max_length=100, choices=THEME_CHOICES, default='default')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
 
-
-# 3. Page Model
+# -----------------------------
+# Page Model
+# -----------------------------
 class Page(models.Model):
     STATUS_CHOICES = [
         ('draft', 'Draft'),
@@ -80,8 +90,9 @@ class Page(models.Model):
     def __str__(self):
         return self.title
 
-
-# 4. Section Model
+# -----------------------------
+# Section Model
+# -----------------------------
 class Section(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name="sections")
