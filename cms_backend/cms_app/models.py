@@ -50,18 +50,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 # -----------------------------
 # Template Model
 # -----------------------------
-THEME_CHOICES = [
-    ('default', 'Default'),
-    ('light', 'Light'),
-    ('dark', 'Dark'),
-]
-
 class Template(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     structure = models.JSONField()  # stores default sections
-    theme = models.CharField(max_length=100, choices=THEME_CHOICES, default='default')
+    theme = models.CharField(max_length=100, default="default")  # <- now free text
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

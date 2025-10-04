@@ -54,6 +54,28 @@ todo : 📝 TODO (next steps)
  Prepare 1–2 additional templates with different themes (Phase 4 kickoff)
 ---
 
+## **Phase 3.5: Backend-Side Rendering Layer**
+
+**Goal:** Ensure public-facing pages are rendered by the backend with Tailwind styling, solving SEO and crawler issues.
+
+**Tasks:**
+
+1. Configure **Django Template Engine (Jinja2/Django templates)** to render published pages.
+2. Create a **PageRenderer service** in Django:
+
+   * Fetch page + sections from DB.
+   * Loop through sections and render as HTML.
+3. Integrate **Tailwind CSS** into Django build pipeline (via `django-tailwind`, `Whitenoise`, or PostCSS build).
+4. Store rendered HTML in cache for faster serving (e.g., Redis).
+5. Expose public routes:
+
+   * `/p/<slug>` → Rendered page (SSR).
+   * `/admin/` → React frontend (Admin UI).
+6. Ensure SEO tags (`<title>`, `<meta>`) and schema markup are injected server-side.
+
+
+---
+
 ## **Phase 4: Template & Theme System**
 
 **Goal:** Provide static design and consistent styling for pages.

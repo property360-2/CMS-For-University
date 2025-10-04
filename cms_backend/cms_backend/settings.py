@@ -28,6 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = "cms_app.User"
+APPEND_SLASH = True
 
 # Application definition
 
@@ -57,7 +58,7 @@ ROOT_URLCONF = "cms_backend.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],  # ✅ add this
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -68,6 +69,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = "cms_backend.wsgi.application"
 
