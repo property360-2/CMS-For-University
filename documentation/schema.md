@@ -68,4 +68,4 @@
 * **Template → Page**: One-to-many, template provides layout and theme.
 * **Page → Section**: One-to-many, sections are ordered building blocks of page content.
 * **Sections inherit template/theme** unless `theme_key` is set for override.
-* **JSONFields** allow flexible storage of dynamic content per se
+* **JSONFields** allow flexible storage of dynamic content per section

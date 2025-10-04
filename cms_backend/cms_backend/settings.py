@@ -32,18 +32,9 @@ APPEND_SLASH = True
 
 # Application definition
 
-INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    "rest_framework_simplejwt.token_blacklist",
-    "cms_app"
-]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",  # MUST be at the top
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -126,6 +117,7 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -133,9 +125,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "cms_app",  # ✅ add this
+    "rest_framework_simplejwt.token_blacklist",
+    "cms_app",
+    "corsheaders",
 ]
 
+
+# Allow your frontend origin
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (

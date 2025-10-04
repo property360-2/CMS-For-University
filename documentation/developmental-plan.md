@@ -16,7 +16,7 @@
 
 ---
 
-## **Phase 2: Database & Migrations** 
+## **Phase 2: Database & Migrations** ✅ / Done
 
 **Goal:** Build a stable DB structure for pages, templates, sections.
 
@@ -30,7 +30,7 @@
 
 ---
 
-## **Phase 3: Backend APIs & CRUD**
+## **Phase 3: Backend APIs & CRUD** ✅ / Done
 
 **Goal:** Enable full CRUD operations and frontend connectivity.
 
@@ -42,19 +42,7 @@
 4. Implement authentication (JWT or Django auth).
 5. Test all API endpoints (Postman/HTTPie).
 
-
-todo : 📝 TODO (next steps)
-
- Test API endpoints via Postman/Thunder Client (/api/users/, /api/pages/, /api/sections/)
-
- Verify JWT login with admin@gmail.com / 1234
-
- Add more seed data (Admissions, Contact Us pages)
-
- Prepare 1–2 additional templates with different themes (Phase 4 kickoff)
----
-
-## **Phase 3.5: Backend-Side Rendering Layer**
+## **Phase 3.5: Backend-Side Rendering Layer** ✅ / Done
 
 **Goal:** Ensure public-facing pages are rendered by the backend with Tailwind styling, solving SEO and crawler issues.
 
@@ -76,7 +64,7 @@ todo : 📝 TODO (next steps)
 
 ---
 
-## **Phase 4: Template & Theme System**
+## **Phase 4: Template & Theme System** ✅ / Done
 
 **Goal:** Provide static design and consistent styling for pages.
 

@@ -1,9 +1,23 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate, Link } from "react-router-dom";
+import API from "../api/axios";
 
 export default function Dashboard() {
   const navigate = useNavigate();
 
+  // Fetch pages
+  const { data, isLoading } = useQuery({
+    queryKey: ["pages"],
+    queryFn: async () => {
+      const res = await API.get("pages/");
+      return res.data;
+    },
+  });
+
+  if (isLoading) return <p>Loading...</p>;
+
+  // Logout handler
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
@@ -12,28 +26,25 @@ export default function Dashboard() {
 
   return (
     <div className="p-6">
-      <h1 className="text-3xl mb-4">Dashboard</h1>
-      <button
-        onClick={handleLogout}
-        className="bg-red-500 text-white px-4 py-2 rounded mb-4"
-      >
-        Logout
-      </button>
-
-      <div className="space-y-2">
-        <Link
-          to="/elementTesting"
-          className="block bg-blue-500 text-white px-4 py-2 rounded"
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl">Dashboard</h1>
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
         >
-          Element Testing
-        </Link>
-        <Link
-          to="/pagesTesting"
-          className="block bg-green-500 text-white px-4 py-2 rounded"
-        >
-          Pages Testing
-        </Link>
+          Logout
+        </button>
       </div>
+
+      <Link to="/pages" className="text-blue-500 mb-4 inline-block">
+        Go to Pages
+      </Link>
+
+      <ul>
+        {data.map((page) => (
+          <li key={page.id}>{page.title}</li>
+        ))}
+      </ul>
     </div>
   );
 }
