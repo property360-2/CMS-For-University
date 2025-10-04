@@ -1,59 +1,97 @@
+// cms_frontend/src/pages/Login.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import API from "../api/axios";
-import { useStore } from "../store/useStore";
+import { useAuth } from "../context/AuthContext";
+import { useToast } from "../components/common/Toast";
+import { Loader2 } from "lucide-react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const setUser = useStore((state) => state.setUser);
+  const { login } = useAuth();
+  const toast = useToast();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+
     try {
-      const res = await API.post("token/", { email, password });
-      localStorage.setItem("access_token", res.data.access);
-      localStorage.setItem("refresh_token", res.data.refresh);
-      setUser({ email });
-      navigate("/dashboard");
+      const result = await login(email, password);
+
+      if (result.success) {
+        toast.success("Login successful!");
+        navigate("/dashboard");
+      } else {
+        toast.error(result.error);
+      }
     // eslint-disable-next-line no-unused-vars
     } catch (err) {
-      setError("Invalid email or password");
+      toast.error("An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-green-500">
+    <div className="flex justify-center items-center h-screen bg-gradient-to-br from-blue-500 to-purple-600">
       <form
         onSubmit={handleLogin}
-        className="p-6 border rounded shadow-md w-80 bg-white"
+        className="p-8 border rounded-lg shadow-2xl w-full max-w-md bg-white"
       >
-        <h2 className="text-2xl mb-4">Login</h2>
-        {error && <p className="text-red-500">{error}</p>}
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-2 mb-3 border rounded"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-2 mb-3 border rounded"
-          required
-        />
+        <div className="mb-6">
+          <h2 className="text-3xl font-bold text-gray-900">Welcome Back</h2>
+          <p className="text-gray-600 mt-1">Sign in to your account</p>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Email Address
+            </label>
+            <input
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+              disabled={isLoading}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Password
+            </label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+              disabled={isLoading}
+            />
+          </div>
+        </div>
+
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded"
+          disabled={isLoading}
+          className="w-full mt-6 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
-          Login
+          {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+          {isLoading ? "Signing in..." : "Sign In"}
         </button>
+
+        <p className="text-center text-sm text-gray-600 mt-4">
+          Don't have an account?{" "}
+          <a href="#" className="text-blue-600 hover:text-blue-800 font-medium">
+            Contact admin
+          </a>
+        </p>
       </form>
     </div>
   );

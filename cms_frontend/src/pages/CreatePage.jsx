@@ -1,54 +1,14 @@
+// cms_frontend/src/pages/CreatePage.jsx
 import React, { useState } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Loader2 } from "lucide-react";
-
-// Mock templates data
-const mockTemplates = [
-  {
-    id: "1",
-    name: "Default Template",
-    description: "Clean and simple layout for general pages",
-    theme: "default",
-    structure: [
-      { type: "heading", properties: { text: "Welcome" } },
-      { type: "paragraph", properties: { text: "Page content goes here" } },
-    ],
-  },
-  {
-    id: "2",
-    name: "Dark Template",
-    description: "Modern dark theme for tech pages",
-    theme: "dark",
-    structure: [
-      { type: "heading", properties: { text: "Dark Theme Page" } },
-      {
-        type: "paragraph",
-        properties: { text: "Content with dark background" },
-      },
-    ],
-  },
-  {
-    id: "3",
-    name: "Light Template",
-    description: "Bright and airy layout",
-    theme: "light",
-    structure: [
-      { type: "heading", properties: { text: "Light Theme" } },
-      { type: "paragraph", properties: { text: "Clean light design" } },
-    ],
-  },
-  {
-    id: "4",
-    name: "Purple Template",
-    description: "Vibrant purple accent theme",
-    theme: "purple",
-    structure: [
-      { type: "heading", properties: { text: "Purple Design" } },
-      { type: "paragraph", properties: { text: "Purple themed content" } },
-    ],
-  },
-];
+import API from "../api/axios";
+import { useToast } from "../components/common/Toast";
 
 export default function PageCreator() {
+  const navigate = useNavigate();
+  const toast = useToast();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     title: "",
@@ -58,8 +18,30 @@ export default function PageCreator() {
     seo_description: "",
     seo_keywords: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [templates] = useState(mockTemplates);
+
+  // Fetch templates from API
+  const { data: templates = [], isLoading: loadingTemplates } = useQuery({
+    queryKey: ["templates"],
+    queryFn: async () => {
+      const res = await API.get("templates/");
+      return res.data;
+    },
+  });
+
+  // Create page mutation
+  const createPageMutation = useMutation({
+    mutationFn: async (pageData) => {
+      const res = await API.post("pages/", pageData);
+      return res.data;
+    },
+    onSuccess: (data) => {
+      toast.success("Page created successfully!");
+      navigate(`/pages/edit/${data.id}`);
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.detail || "Failed to create page");
+    },
+  });
 
   const handleTitleChange = (e) => {
     const title = e.target.value;
@@ -76,13 +58,18 @@ export default function PageCreator() {
   };
 
   const handleSubmit = () => {
-    setIsSubmitting(true);
+    const payload = {
+      title: formData.title,
+      slug: formData.slug,
+      status: formData.status,
+      template: formData.template,
+      seo_meta: {
+        description: formData.seo_description,
+        keywords: formData.seo_keywords,
+      },
+    };
 
-    setTimeout(() => {
-      console.log("Creating page:", formData);
-      alert(`Page "${formData.title}" created successfully!`);
-      setIsSubmitting(false);
-    }, 1500);
+    createPageMutation.mutate(payload);
   };
 
   const selectedTemplate = templates.find((t) => t.id === formData.template);
@@ -97,12 +84,20 @@ export default function PageCreator() {
     return colors[theme] || colors.default;
   };
 
+  if (loadingTemplates) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <button
-            onClick={() => alert("Navigate back")}
+            onClick={() => navigate("/pages")}
             className="flex items-center text-gray-600 hover:text-gray-900 mb-4 transition"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -164,44 +159,52 @@ export default function PageCreator() {
               Select a template that matches your page style
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {templates.map((template) => (
-                <button
-                  key={template.id}
-                  onClick={() => handleTemplateSelect(template)}
-                  className={`text-left p-4 rounded-lg border-2 transition ${
-                    formData.template === template.id
-                      ? "border-blue-600 bg-blue-50"
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-bold text-gray-900">{template.name}</h3>
-                    <span className="text-xs px-2 py-1 bg-gray-100 rounded capitalize">
-                      {template.theme}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-3">
-                    {template.description}
-                  </p>
-
-                  <div
-                    className={`p-3 rounded border ${getThemePreview(
-                      template.theme
-                    )}`}
+            {templates.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {templates.map((template) => (
+                  <button
+                    key={template.id}
+                    onClick={() => handleTemplateSelect(template)}
+                    className={`text-left p-4 rounded-lg border-2 transition ${
+                      formData.template === template.id
+                        ? "border-blue-600 bg-blue-50"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
                   >
-                    <div className="text-xs font-bold mb-1">Preview</div>
-                    <div className="text-xs opacity-75">
-                      Sample content in {template.theme} theme
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-bold text-gray-900">
+                        {template.name}
+                      </h3>
+                      <span className="text-xs px-2 py-1 bg-gray-100 rounded capitalize">
+                        {template.theme}
+                      </span>
                     </div>
-                  </div>
+                    <p className="text-sm text-gray-600 mb-3">
+                      {template.description}
+                    </p>
 
-                  <div className="mt-2 text-xs text-gray-500">
-                    {template.structure.length} sections included
-                  </div>
-                </button>
-              ))}
-            </div>
+                    <div
+                      className={`p-3 rounded border ${getThemePreview(
+                        template.theme
+                      )}`}
+                    >
+                      <div className="text-xs font-bold mb-1">Preview</div>
+                      <div className="text-xs opacity-75">
+                        Sample content in {template.theme} theme
+                      </div>
+                    </div>
+
+                    <div className="mt-2 text-xs text-gray-500">
+                      {template.structure?.length || 0} sections included
+                    </div>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-gray-500">No templates available</p>
+              </div>
+            )}
 
             <div className="mt-6 flex justify-end">
               <button
@@ -352,17 +355,24 @@ export default function PageCreator() {
                   type="button"
                   onClick={() => setStep(1)}
                   className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                  disabled={createPageMutation.isPending}
                 >
                   Back
                 </button>
                 <button
                   type="button"
                   onClick={handleSubmit}
-                  disabled={isSubmitting || !formData.title || !formData.slug}
+                  disabled={
+                    createPageMutation.isPending ||
+                    !formData.title ||
+                    !formData.slug
+                  }
                   className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 flex items-center gap-2"
                 >
-                  {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
-                  {isSubmitting ? "Creating..." : "Create Page"}
+                  {createPageMutation.isPending && (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  )}
+                  {createPageMutation.isPending ? "Creating..." : "Create Page"}
                 </button>
               </div>
             </div>
