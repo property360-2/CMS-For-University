@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+@import "tailwindcss";
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Smooth transitions for drag and drop */
+.sortable-ghost {
+  opacity: 0.4;
+}
+
+.sortable-drag {
+  cursor: grabbing !important;
+}

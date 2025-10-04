@@ -2,7 +2,9 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
-import Pages from "../pages/Pages";
+import Pages from "../pages/pages";
+import CreatePage from "../pages/CreatePage";
+import EditPage from "../pages/EditPage";
 import ProtectedRoute from "../routes/ProtectedRoute";
 
 export default function AppRouter() {
@@ -23,6 +25,22 @@ export default function AppRouter() {
           element={
             <ProtectedRoute>
               <Pages />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/pages/create"
+          element={
+            <ProtectedRoute>
+              <CreatePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/pages/edit/:id"
+          element={
+            <ProtectedRoute>
+              <EditPage />
             </ProtectedRoute>
           }
         />
