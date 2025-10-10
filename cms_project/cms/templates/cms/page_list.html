@@ -1,0 +1,153 @@
+{% extends "cms/base.html" %}
+
+{% block title %}Home - MarkCMS{% endblock %}
+{% block description %}Browse all published content on MarkCMS{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="text-center mb-16 fade-in">
+    <h1
+        class="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+        Welcome to MarkCMS
+    </h1>
+    <p class="text-xl text-secondary max-w-2xl mx-auto">
+        A modern, elegant markdown-based content management system. Write beautifully, publish instantly.
+    </p>
+</div>
+
+<!-- Stats Section -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+    <div class="bg-secondary border border-custom rounded-xl p-6 text-center card-hover">
+        <div class="text-4xl font-bold accent-color mb-2">{{ pages.count }}</div>
+        <div class="text-secondary">Published Pages</div>
+    </div>
+    <div class="bg-secondary border border-custom rounded-xl p-6 text-center card-hover">
+        <div class="text-4xl font-bold accent-color mb-2">📝</div>
+        <div class="text-secondary">Markdown Powered</div>
+    </div>
+    <div class="bg-secondary border border-custom rounded-xl p-6 text-center card-hover">
+        <div class="text-4xl font-bold accent-color mb-2">🎨</div>
+        <div class="text-secondary">3 Themes</div>
+    </div>
+</div>
+
+<!-- Pages Grid -->
+{% if pages %}
+<div class="mb-8">
+    <h2 class="text-3xl font-bold mb-6 flex items-center">
+        <svg class="w-8 h-8 mr-3 accent-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+            </path>
+        </svg>
+        Latest Content
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for page in pages %}
+        <article class="bg-secondary border border-custom rounded-xl overflow-hidden card-hover">
+            <a href="{% url 'page_detail' page.slug %}" class="block">
+                <!-- Card Header with Gradient -->
+                <div class="h-32 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 relative">
+                    <div class="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
+                        <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Card Content -->
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-3 text-primary hover:accent-color transition line-clamp-2">
+                        {{ page.title }}
+                    </h3>
+
+                    {% if page.seo_description %}
+                    <p class="text-secondary mb-4 line-clamp-3">
+                        {{ page.seo_description }}
+                    </p>
+                    {% else %}
+                    <p class="text-secondary mb-4 line-clamp-3">
+                        {{ page.content_md|truncatewords:30 }}
+                    </p>
+                    {% endif %}
+
+                    <!-- Footer -->
+                    <div class="flex items-center justify-between text-sm text-secondary pt-4 border-t border-custom">
+                        <div class="flex items-center space-x-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                            <span>{{ page.created_at|date:"M d, Y" }}</span>
+                        </div>
+                        <span class="accent-color font-medium flex items-center">
+                            Read more
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                                </path>
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+            </a>
+        </article>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<!-- Empty State -->
+<div class="text-center py-20">
+    <div class="mb-6">
+        <svg class="w-24 h-24 mx-auto text-secondary opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+            </path>
+        </svg>
+    </div>
+    <h2 class="text-3xl font-bold mb-4">No Content Yet</h2>
+    <p class="text-secondary mb-8 max-w-md mx-auto">
+        Start creating amazing content! Head to the admin panel to create your first page.
+    </p>
+    <a href="/admin/"
+        class="inline-flex items-center px-6 py-3 accent-bg text-white rounded-lg hover:opacity-90 transition font-semibold">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Create First Page
+    </a>
+</div>
+{% endif %}
+
+<!-- Call to Action -->
+<div class="mt-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-8 md:p-12 text-center text-white">
+    <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Create?</h2>
+    <p class="text-lg mb-8 opacity-90 max-w-2xl mx-auto">
+        Access the admin panel to start writing your content in Markdown. Simple, powerful, and beautiful.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/admin/"
+            class="inline-flex items-center justify-center px-8 py-3 bg-white text-purple-600 rounded-lg hover:bg-gray-100 transition font-semibold">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                </path>
+            </svg>
+            Admin Panel
+        </a>
+        <a href="{% url 'cheat_sheet' %}"
+            class="inline-flex items-center justify-center px-8 py-3 bg-white bg-opacity-20 backdrop-blur text-white rounded-lg hover:bg-opacity-30 transition font-semibold border-2 border-white border-opacity-30">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                </path>
+            </svg>
+            Markdown Guide
+        </a>
+    </div>
+</div>
+{% endblock %}

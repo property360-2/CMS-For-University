@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My CMS{% endblock %}</title>
+    {% block head %}
+    <meta name="description" content="{% block description %}A modern markdown-based CMS{% endblock %}">
+    {% endblock %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        purple: {
+                            50: '#faf5ff',
+                            100: '#f3e8ff',
+                            200: '#e9d5ff',
+                            300: '#d8b4fe',
+                            400: '#c084fc',
+                            500: '#a855f7',
+                            600: '#9333ea',
+                            700: '#7e22ce',
+                            800: '#6b21a8',
+                            900: '#581c87',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Light Theme */
+        .theme-light {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --bg-hover: #f3f4f6;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+        }
+
+        /* Dark Theme */
+        .theme-dark {
+            --bg-primary: #1f2937;
+            --bg-secondary: #111827;
+            --bg-hover: #374151;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --border-color: #374151;
+            --accent: #60a5fa;
+            --accent-hover: #3b82f6;
+        }
+
+        /* Purple Theme */
+        .theme-purple {
+            --bg-primary: #2e1065;
+            --bg-secondary: #1e0f4d;
+            --bg-hover: #4c1d95;
+            --text-primary: #faf5ff;
+            --text-secondary: #e9d5ff;
+            --border-color: #6b21a8;
+            --accent: #c084fc;
+            --accent-hover: #a855f7;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .bg-primary {
+            background-color: var(--bg-primary);
+        }
+
+        .bg-secondary {
+            background-color: var(--bg-secondary);
+        }
+
+        .bg-hover:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .text-primary {
+            color: var(--text-primary);
+        }
+
+        .text-secondary {
+            color: var(--text-secondary);
+        }
+
+        .border-custom {
+            border-color: var(--border-color);
+        }
+
+        .accent-color {
+            color: var(--accent);
+        }
+
+        .accent-bg {
+            background-color: var(--accent);
+        }
+
+        .accent-bg:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* Prose Styling */
+        .prose h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 1.5rem 0;
+            color: var(--text-primary);
+        }
+
+        .prose h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin: 1.25rem 0;
+            color: var(--text-primary);
+        }
+
+        .prose h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1rem 0;
+            color: var(--text-primary);
+        }
+
+        .prose p {
+            margin: 1rem 0;
+            line-height: 1.75;
+            color: var(--text-primary);
+        }
+
+        .prose a {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        .prose a:hover {
+            color: var(--accent-hover);
+        }
+
+        .prose ul,
+        .prose ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+            color: var(--text-primary);
+        }
+
+        .prose li {
+            margin: 0.5rem 0;
+        }
+
+        .prose code {
+            background-color: var(--bg-secondary);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-size: 0.9em;
+            color: var(--accent);
+        }
+
+        .prose pre {
+            background-color: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .prose pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+        }
+
+        .prose blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        .prose table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .prose th,
+        .prose td {
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .prose th {
+            background-color: var(--bg-secondary);
+            font-weight: 600;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Card hover effect */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-secondary border-b border-custom sticky top-0 z-50 backdrop-blur-lg bg-opacity-90">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="{% url 'page_list' %}" class="flex items-center space-x-2">
+                    <svg class="w-8 h-8 accent-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    <span class="text-xl font-bold text-primary">MarkCMS</span>
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="{% url 'page_list' %}" class="text-secondary hover:text-primary transition">Home</a>
+                    <a href="{% url 'cheat_sheet' %}" class="text-secondary hover:text-primary transition">Markdown
+                        Guide</a>
+
+                    <!-- Search Form -->
+                    <form action="{% url 'search' %}" method="get" class="relative">
+                        <input type="text" name="q" placeholder="Search..."
+                            class="bg-primary border border-custom rounded-lg px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-opacity-50 text-primary transition"
+                            style="focus:ring-color: var(--accent);">
+                        <svg class="w-5 h-5 absolute left-3 top-2.5 text-secondary" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </form>
+
+                    <!-- Theme Switcher -->
+                    <div class="flex items-center space-x-2 bg-primary border border-custom rounded-lg p-1">
+                        <button onclick="setTheme('light')" class="theme-btn p-2 rounded hover:bg-hover transition"
+                            title="Light Theme">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                        <button onclick="setTheme('dark')" class="theme-btn p-2 rounded hover:bg-hover transition"
+                            title="Dark Theme">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                            </svg>
+                        </button>
+                        <button onclick="setTheme('purple')" class="theme-btn p-2 rounded hover:bg-hover transition"
+                            title="Purple Theme">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-hover">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-custom">
+            <div class="px-4 py-4 space-y-3">
+                <a href="{% url 'page_list' %}" class="block text-secondary hover:text-primary transition py-2">Home</a>
+                <a href="{% url 'cheat_sheet' %}"
+                    class="block text-secondary hover:text-primary transition py-2">Markdown Guide</a>
+                <form action="{% url 'search' %}" method="get" class="relative">
+                    <input type="text" name="q" placeholder="Search..."
+                        class="w-full bg-primary border border-custom rounded-lg px-4 py-2 pl-10 focus:outline-none text-primary">
+                    <svg class="w-5 h-5 absolute left-3 top-2.5 text-secondary" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </form>
+                <div class="flex space-x-2 pt-2">
+                    <button onclick="setTheme('light')"
+                        class="flex-1 py-2 rounded-lg bg-secondary hover:bg-hover transition">☀️ Light</button>
+                    <button onclick="setTheme('dark')"
+                        class="flex-1 py-2 rounded-lg bg-secondary hover:bg-hover transition">🌙 Dark</button>
+                    <button onclick="setTheme('purple')"
+                        class="flex-1 py-2 rounded-lg bg-secondary hover:bg-hover transition">⚡ Purple</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 fade-in">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-secondary border-t border-custom mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">MarkCMS</h3>
+                    <p class="text-secondary">A modern, markdown-based content management system built with Django.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'page_list' %}"
+                                class="text-secondary hover:accent-color transition">Home</a></li>
+                        <li><a href="{% url 'cheat_sheet' %}"
+                                class="text-secondary hover:accent-color transition">Markdown Guide</a></li>
+                        <li><a href="/admin/" class="text-secondary hover:accent-color transition">Admin Panel</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">About</h3>
+                    <p class="text-secondary">Built with Django, Tailwind CSS, and ❤️</p>
+                </div>
+            </div>
+            <div class="border-t border-custom mt-8 pt-8 text-center text-secondary">
+                <p>&copy; 2025 MarkCMS. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        function setTheme(theme) {
+            document.documentElement.className = 'theme-' + theme;
+            localStorage.setItem('theme', theme);
+        }
+
+        // Load saved theme
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            setTheme(savedTheme);
+        });
+
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,159 @@
+{% extends "cms/base.html" %}
+
+{% block title %}Search Results{% if query %} for "{{ query }}"{% endif %} - MarkCMS{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto fade-in">
+    <!-- Search Header -->
+    <div class="text-center mb-12">
+        <div
+            class="inline-flex items-center justify-center w-20 h-20 bg-secondary border border-custom rounded-full mb-6">
+            <svg class="w-10 h-10 accent-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-4">Search Results</h1>
+        {% if query %}
+        <p class="text-xl text-secondary">
+            Found <span class="accent-color font-semibold">{{ results.count }}</span> result{{ results.count|pluralize
+            }} for
+            <span class="font-semibold">"{{ query }}"</span>
+        </p>
+        {% else %}
+        <p class="text-xl text-secondary">Enter a search term to find content</p>
+        {% endif %}
+    </div>
+
+    <!-- Search Form -->
+    <div class="mb-12">
+        <form action="{% url 'search' %}" method="get" class="relative max-w-2xl mx-auto">
+            <input type="text" name="q" value="{{ query }}" placeholder="Search pages..."
+                class="w-full bg-secondary border-2 border-custom rounded-xl px-6 py-4 pl-14 focus:outline-none focus:border-opacity-50 text-primary text-lg transition"
+                style="focus:border-color: var(--accent);" autofocus>
+            <svg class="w-6 h-6 absolute left-5 top-5 text-secondary" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <button type="submit"
+                class="absolute right-3 top-3 px-6 py-2 accent-bg text-white rounded-lg hover:opacity-90 transition font-medium">
+                Search
+            </button>
+        </form>
+    </div>
+
+    <!-- Results -->
+    {% if results %}
+    <div class="space-y-6">
+        {% for page in results %}
+        <article class="bg-secondary border border-custom rounded-xl p-6 card-hover">
+            <a href="{% url 'page_detail' page.slug %}" class="block">
+                <div class="flex items-start space-x-4">
+                    <!-- Icon -->
+                    <div
+                        class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="flex-1 min-w-0">
+                        <h2 class="text-2xl font-bold mb-2 text-primary hover:accent-color transition">
+                            {{ page.title }}
+                        </h2>
+
+                        {% if page.seo_description %}
+                        <p class="text-secondary mb-3">
+                            {{ page.seo_description }}
+                        </p>
+                        {% else %}
+                        <p class="text-secondary mb-3">
+                            {{ page.content_md|truncatewords:40 }}
+                        </p>
+                        {% endif %}
+
+                        <div class="flex items-center space-x-4 text-sm text-secondary">
+                            <div class="flex items-center space-x-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                                <span>{{ page.created_at|date:"M d, Y" }}</span>
+                            </div>
+                            <span class="accent-color font-medium flex items-center">
+                                Read more
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </article>
+        {% endfor %}
+    </div>
+    {% elif query %}
+    <!-- No Results -->
+    <div class="text-center py-16">
+        <div
+            class="inline-flex items-center justify-center w-24 h-24 bg-secondary border border-custom rounded-full mb-6">
+            <svg class="w-12 h-12 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+        </div>
+        <h2 class="text-2xl font-bold mb-4">No Results Found</h2>
+        <p class="text-secondary mb-8 max-w-md mx-auto">
+            We couldn't find any pages matching "{{ query }}". Try different keywords or browse all pages.
+        </p>
+        <a href="{% url 'page_list' %}"
+            class="inline-flex items-center px-6 py-3 accent-bg text-white rounded-lg hover:opacity-90 transition font-semibold">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                </path>
+            </svg>
+            Browse All Pages
+        </a>
+    </div>
+    {% else %}
+    <!-- Search Tips -->
+    <div class="bg-secondary border border-custom rounded-xl p-8">
+        <h3 class="text-xl font-semibold mb-4 flex items-center">
+            <svg class="w-6 h-6 mr-2 accent-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            Search Tips
+        </h3>
+        <ul class="space-y-2 text-secondary">
+            <li class="flex items-start">
+                <svg class="w-5 h-5 mr-2 mt-0.5 accent-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                <span>Search by page title or content</span>
+            </li>
+            <li class="flex items-start">
+                <svg class="w-5 h-5 mr-2 mt-0.5 accent-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                <span>Use specific keywords for better results</span>
+            </li>
+            <li class="flex items-start">
+                <svg class="w-5 h-5 mr-2 mt-0.5 accent-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                <span>Search is case-insensitive</span>
+            </li>
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
