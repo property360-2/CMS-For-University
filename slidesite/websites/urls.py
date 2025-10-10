@@ -20,6 +20,8 @@ urlpatterns = [
     # Section management
     path('sections/<uuid:section_id>/update/', views.update_section, name='update_section'),
     path('sections/<uuid:section_id>/delete/', views.delete_section, name='delete_section'),
+    path('sections/<uuid:section_id>/upload-image/', views.upload_image, name='upload_image'),
+    path('sections/<uuid:section_id>/upload-background/', views.upload_background, name='upload_background'),
     path('pages/<uuid:page_id>/sections/create/', views.create_section, name='create_section'),
     
     # Element management

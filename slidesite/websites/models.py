@@ -109,11 +109,36 @@ class Section(models.Model):
     """Content section/block within a page"""
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='sections')
+    
+    # Content
     heading = models.CharField(max_length=255, blank=True)
     body = models.TextField(blank=True)
     image = models.ImageField(upload_to='sections/', null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     order = models.PositiveIntegerField(default=0)
+    
+    # Template type
+    template_type = models.CharField(max_length=50, default='custom', blank=True)
+    
+    # Styling options
+    background_color = models.CharField(max_length=20, blank=True, default='')
+    background_image = models.ImageField(upload_to='backgrounds/', null=True, blank=True)
+    background_gradient = models.CharField(max_length=200, blank=True, default='')
+    text_color = models.CharField(max_length=20, blank=True, default='')
+    font_family = models.CharField(max_length=100, blank=True, default='')
+    font_size = models.CharField(max_length=20, blank=True, default='')
+    
+    # Button customization
+    button_text = models.CharField(max_length=100, blank=True, default='')
+    button_link = models.URLField(blank=True, default='')
+    button_color = models.CharField(max_length=20, blank=True, default='')
+    button_text_color = models.CharField(max_length=20, blank=True, default='')
+    
+    # Additional styling
+    padding = models.CharField(max_length=50, blank=True, default='60px 0')
+    margin = models.CharField(max_length=50, blank=True, default='0')
+    border_radius = models.CharField(max_length=20, blank=True, default='0')
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -121,6 +146,7 @@ class Section(models.Model):
         ordering = ['order', 'created_at']
     
     def __str__(self):
+        return f"{self.page.title} - Section {self.order}"
         return f"{self.page.title} - Section {self.order}"
 
 

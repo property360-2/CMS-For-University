@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Login - SlideSite{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-16">
+    <div class="max-w-md mx-auto">
+        <div class="card">
+            <h1 class="text-3xl font-bold mb-6 text-center">Welcome Back! 👋</h1>
+
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+
+                <div>
+                    <label for="id_username" class="block mb-2 font-medium">Username</label>
+                    <input type="text" name="username" id="id_username" required class="input-field"
+                        placeholder="Enter your username">
+                </div>
+
+                <div>
+                    <label for="id_password" class="block mb-2 font-medium">Password</label>
+                    <input type="password" name="password" id="id_password" required class="input-field"
+                        placeholder="Enter your password">
+                </div>
+
+                {% if form.errors %}
+                <div class="p-4 rounded-lg" style="background-color: #fee2e2; color: #991b1b;">
+                    <p>❌ Invalid username or password. Please try again.</p>
+                </div>
+                {% endif %}
+
+                <button type="submit" class="btn-primary w-full">
+                    🚀 Login
+                </button>
+            </form>
+
+            <div class="mt-6 text-center" style="color: var(--text-secondary);">
+                <p>Don't have an account? <a href="{% url 'accounts:register' %}" style="color: var(--accent);"
+                        class="font-medium hover:underline">Sign up here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
