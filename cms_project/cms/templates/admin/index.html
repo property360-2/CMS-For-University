@@ -276,15 +276,15 @@
         </div>
     {% endfor %}
 {% else %}
-    <p>{% translate 'You don't have permission to view or edit anything.' %}</p>
+    <p>{% translate "You don't have permission to view or edit anything." %}</p>
 {% endif %}
 {% endblock %}
 
 {% block sidebar %}
 <div id="content-related">
     <div class="module" id="recent-actions-module">
-        <h2>{% translate 'Recent actions' %}</h2>
-        <h3>{% translate 'My actions' %}</h3>
+        <h2>{% translate "Recent actions" %}</h2>
+        <h3>{% translate "My actions" %}</h3>
         {% load log %}
         {% get_admin_log 10 as admin_log for_user user %}
         {% if not admin_log %}

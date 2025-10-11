@@ -1,360 +1,381 @@
-{% extends "admin/base_site.html" %}
-{% load i18n static %}
-
-{% block extrastyle %}
-{{ block.super }}
+{% extends "admin/base_site.html" %} {% load i18n static %} {% block extrastyle
+%} {{ block.super }}
 <style>
-    body.login {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-    }
+  body.login {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
 
-    .login #container {
-        width: 100%;
-        max-width: 450px;
-        margin: 0;
-    }
+  .login #container {
+    width: 100%;
+    max-width: 450px;
+    margin: 0;
+  }
 
-    .login #header {
-        background: none !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 0 30px 0 !important;
-    }
+  .login #header {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 0 30px 0 !important;
+  }
 
-    .login #header h1 {
-        text-align: center;
-        margin: 0;
-    }
+  .login #header h1 {
+    text-align: center;
+    margin: 0;
+  }
 
-    .login #header h1 a {
-        color: white !important;
-        font-size: 36px !important;
-        font-weight: 700 !important;
-        text-decoration: none !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        gap: 12px !important;
-    }
+  .login #header h1 a {
+    color: white !important;
+    font-size: 36px !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px !important;
+  }
 
-    .login #content {
-        background: white !important;
-        border-radius: 16px !important;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
-        padding: 0 !important;
-        overflow: hidden;
-    }
+  .login #content {
+    background: white !important;
+    border-radius: 16px !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+    padding: 0 !important;
+    overflow: hidden;
+  }
 
-    .login-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 40px 40px 30px 40px;
-        text-align: center;
-    }
+  .login-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px 40px 30px 40px;
+    text-align: center;
+  }
 
-    .login-header h2 {
-        font-size: 28px;
-        font-weight: 700;
-        margin: 0 0 8px 0;
-    }
+  .login-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+  }
 
-    .login-header p {
-        margin: 0;
-        opacity: 0.95;
-        font-size: 15px;
-    }
+  .login-header p {
+    margin: 0;
+    opacity: 0.95;
+    font-size: 15px;
+  }
 
-    .login #content-main {
-        padding: 40px !important;
-    }
+  .login #content-main {
+    padding: 40px !important;
+  }
 
-    .login form {
-        margin: 0 !important;
-    }
+  .login form {
+    margin: 0 !important;
+  }
 
-    .login .form-row {
-        padding: 0 !important;
-        margin-bottom: 24px !important;
-        border: none !important;
-    }
+  .login .form-row {
+    padding: 0 !important;
+    margin-bottom: 24px !important;
+    border: none !important;
+  }
 
-    .login .form-row:last-of-type {
-        margin-bottom: 0 !important;
-    }
+  .login .form-row:last-of-type {
+    margin-bottom: 0 !important;
+  }
 
-    .login label {
-        display: block !important;
-        font-weight: 600 !important;
-        color: #1f2937 !important;
-        margin-bottom: 8px !important;
-        font-size: 14px !important;
-    }
+  .login label {
+    display: block !important;
+    font-weight: 600 !important;
+    color: #1f2937 !important;
+    margin-bottom: 8px !important;
+    font-size: 14px !important;
+  }
 
-    .login input[type="text"],
-    .login input[type="password"] {
-        width: 100% !important;
-        padding: 14px 16px !important;
-        border: 2px solid #e5e7eb !important;
-        border-radius: 10px !important;
-        font-size: 15px !important;
-        transition: all 0.2s !important;
-        box-sizing: border-box !important;
-    }
+  .login input[type="text"],
+  .login input[type="password"] {
+    width: 100% !important;
+    padding: 14px 16px !important;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 10px !important;
+    font-size: 15px !important;
+    transition: all 0.2s !important;
+    box-sizing: border-box !important;
+  }
 
-    .login input[type="text"]:focus,
-    .login input[type="password"]:focus {
-        border-color: #a855f7 !important;
-        box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1) !important;
-        outline: none !important;
-    }
+  .login input[type="text"]:focus,
+  .login input[type="password"]:focus {
+    border-color: #a855f7 !important;
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1) !important;
+    outline: none !important;
+  }
 
-    .login .submit-row {
-        padding: 0 !important;
-        margin-top: 32px !important;
-        background: none !important;
-        border: none !important;
-    }
+  .login .submit-row {
+    padding: 0 !important;
+    margin-top: 32px !important;
+    background: none !important;
+    border: none !important;
+  }
 
-    .login input[type="submit"] {
-        width: 100% !important;
-        background: linear-gradient(135deg, #a855f7 0%, #764ba2 100%) !important;
-        color: white !important;
-        border: none !important;
-        padding: 14px 24px !important;
-        border-radius: 10px !important;
-        font-size: 16px !important;
-        font-weight: 700 !important;
-        cursor: pointer !important;
-        transition: all 0.3s !important;
-        margin: 0 !important;
-    }
+  .login input[type="submit"] {
+    width: 100% !important;
+    background: linear-gradient(135deg, #a855f7 0%, #764ba2 100%) !important;
+    color: white !important;
+    border: none !important;
+    padding: 14px 24px !important;
+    border-radius: 10px !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    transition: all 0.3s !important;
+    margin: 0 !important;
+  }
 
-    .login input[type="submit"]:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(168, 85, 247, 0.4) !important;
-    }
+  .login input[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(168, 85, 247, 0.4) !important;
+  }
 
-    .login input[type="submit"]:active {
-        transform: translateY(0);
-    }
+  .login input[type="submit"]:active {
+    transform: translateY(0);
+  }
 
-    .login .errornote {
-        background: #fee2e2 !important;
-        border: 1px solid #fca5a5 !important;
-        color: #991b1b !important;
-        padding: 16px !important;
-        border-radius: 10px !important;
-        margin-bottom: 24px !important;
-        font-weight: 500 !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 10px !important;
-    }
+  .login .errornote {
+    background: #fee2e2 !important;
+    border: 1px solid #fca5a5 !important;
+    color: #991b1b !important;
+    padding: 16px !important;
+    border-radius: 10px !important;
+    margin-bottom: 24px !important;
+    font-weight: 500 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
 
-    .login .errornote::before {
-        content: "⚠";
-        font-size: 20px;
-    }
+  .login .errornote::before {
+    content: "⚠";
+    font-size: 20px;
+  }
 
-    .password-toggle {
-        position: relative;
-    }
+  .password-toggle {
+    position: relative;
+  }
 
-    .password-toggle-btn {
-        position: absolute;
-        right: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 4px;
-        color: #6b7280;
-        transition: color 0.2s;
-    }
+  .password-toggle-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: #6b7280;
+    transition: color 0.2s;
+  }
 
-    .password-toggle-btn:hover {
-        color: #a855f7;
-    }
+  .password-toggle-btn:hover {
+    color: #a855f7;
+  }
 
+  .login-footer {
+    text-align: center;
+    padding: 24px 40px 40px 40px;
+    color: #6b7280;
+    font-size: 13px;
+    border-top: 1px solid #f3f4f6;
+  }
+
+  .login-footer a {
+    color: #a855f7;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .login-footer a:hover {
+    text-decoration: underline;
+  }
+
+  /* Decorative elements */
+  .login-decoration {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.1;
+    pointer-events: none;
+  }
+
+  .decoration-1 {
+    width: 400px;
+    height: 400px;
+    background: white;
+    top: -200px;
+    right: -200px;
+  }
+
+  .decoration-2 {
+    width: 300px;
+    height: 300px;
+    background: white;
+    bottom: -150px;
+    left: -150px;
+  }
+
+  /* Animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .login #content {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .login #content-main,
+    .login-header,
     .login-footer {
-        text-align: center;
-        padding: 24px 40px 40px 40px;
-        color: #6b7280;
-        font-size: 13px;
-        border-top: 1px solid #f3f4f6;
+      padding-left: 24px !important;
+      padding-right: 24px !important;
     }
-
-    .login-footer a {
-        color: #a855f7;
-        text-decoration: none;
-        font-weight: 600;
-    }
-
-    .login-footer a:hover {
-        text-decoration: underline;
-    }
-
-    /* Decorative elements */
-    .login-decoration {
-        position: absolute;
-        border-radius: 50%;
-        opacity: 0.1;
-        pointer-events: none;
-    }
-
-    .decoration-1 {
-        width: 400px;
-        height: 400px;
-        background: white;
-        top: -200px;
-        right: -200px;
-    }
-
-    .decoration-2 {
-        width: 300px;
-        height: 300px;
-        background: white;
-        bottom: -150px;
-        left: -150px;
-    }
-
-    /* Animation */
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .login #content {
-        animation: fadeIn 0.5s ease-out;
-    }
-
-    /* Responsive */
-    @media (max-width: 480px) {
-        .login #content-main,
-        .login-header,
-        .login-footer {
-            padding-left: 24px !important;
-            padding-right: 24px !important;
-        }
-    }
+  }
 </style>
-{% endblock %}
-
-{% block bodyclass %}{{ block.super }} login{% endblock %}
-
-{% block usertools %}{% endblock %}
-
-{% block nav-global %}{% endblock %}
-
-{% block content_title %}{% endblock %}
-
-{% block breadcrumbs %}{% endblock %}
-
-{% block content %}
+{% endblock %} {% block bodyclass %}{{ block.super }} login{% endblock %} {%
+block usertools %}{% endblock %} {% block nav-global %}{% endblock %} {% block
+content_title %}{% endblock %} {% block breadcrumbs %}{% endblock %} {% block
+content %}
 <div class="login-decoration decoration-1"></div>
 <div class="login-decoration decoration-2"></div>
 
 {% if form.errors and not form.non_field_errors %}
 <p class="errornote">
-    {% if form.errors.items|length == 1 %}
-        Please correct the error below.
-    {% else %}
-        Please correct the errors below.
-    {% endif %}
+  {% if form.errors.items|length == 1 %} Please correct the error below. {% else
+  %} Please correct the errors below. {% endif %}
 </p>
-{% endif %}
-
-{% if form.non_field_errors %}
-<p class="errornote">
-    {{ form.non_field_errors }}
-</p>
+{% endif %} {% if form.non_field_errors %}
+<p class="errornote">{{ form.non_field_errors }}</p>
 {% endif %}
 
 <div class="login-header">
-    <svg style="width: 48px; height: 48px; margin: 0 auto 16px auto; display: block;" fill="none" stroke="white" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-    </svg>
-    <h2>Welcome Back!</h2>
-    <p>Sign in to manage your content</p>
+  <svg
+    style="width: 48px; height: 48px; margin: 0 auto 16px auto; display: block"
+    fill="none"
+    stroke="white"
+    viewBox="0 0 24 24"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+    ></path>
+  </svg>
+  <h2>Welcome Back!</h2>
+  <p>Sign in to manage your content</p>
 </div>
 
 <div id="content-main">
-    <form action="{{ app_path }}" method="post" id="login-form">
-        {% csrf_token %}
-        
-        <div class="form-row">
-            {{ form.username.label_tag }}
-            {{ form.username }}
-        </div>
+  <form action="{{ app_path }}" method="post" id="login-form">
+    {% csrf_token %}
 
-        <div class="form-row">
-            {{ form.password.label_tag }}
-            <div class="password-toggle">
-                {{ form.password }}
-                <button type="button" class="password-toggle-btn" onclick="togglePassword()">
-                    <svg id="eye-icon" style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                    </svg>
-                </button>
-            </div>
-        </div>
+    <div class="form-row">
+      {{ form.username.label_tag }} {{ form.username }}
+    </div>
 
-        {% url 'admin_password_reset' as password_reset_url %}
-        {% if password_reset_url %}
-        <div class="password-reset-link" style="text-align: right; margin-top: 12px;">
-            <a href="{{ password_reset_url }}" style="color: #a855f7; text-decoration: none; font-size: 13px; font-weight: 500;">
-                Forgot your password?
-            </a>
-        </div>
-        {% endif %}
+    <div class="form-row">
+      {{ form.password.label_tag }}
+      <div class="password-toggle">
+        {{ form.password }}
+        <button
+          type="button"
+          class="password-toggle-btn"
+          onclick="togglePassword()"
+        >
+          <svg
+            id="eye-icon"
+            style="width: 20px; height: 20px"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            ></path>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </div>
 
-        <div class="submit-row">
-            <input type="submit" value="{% translate 'Sign In' %}">
-        </div>
+    {% url 'admin_password_reset' as password_reset_url %} {% if
+    password_reset_url %}
+    <div
+      class="password-reset-link"
+      style="text-align: right; margin-top: 12px"
+    >
+      <a
+        href="{{ password_reset_url }}"
+        style="
+          color: #a855f7;
+          text-decoration: none;
+          font-size: 13px;
+          font-weight: 500;
+        "
+      >
+        Forgot your password?
+      </a>
+    </div>
+    {% endif %}
 
-        <input type="hidden" name="next" value="{{ next }}">
-    </form>
+    <div class="submit-row">
+      <input type="submit" value="{% translate 'Sign In' %}" />
+    </div>
+
+    <input type="hidden" name="next" value="{{ next }}" />
+  </form>
 </div>
 
 <div class="login-footer">
-    <p>
-        <a href="/" target="_blank">← Back to Website</a>
-    </p>
-    <p style="margin-top: 12px;">
-        MarkCMS Admin Panel
-    </p>
+  <p>
+    <a href="/" target="_blank">← Back to Website</a>
+  </p>
+  <p style="margin-top: 12px">MarkCMS Admin Panel</p>
 </div>
 
 <script>
-function togglePassword() {
-    const passwordField = document.getElementById('id_password');
-    const eyeIcon = document.getElementById('eye-icon');
-    
-    if (passwordField.type === 'password') {
-        passwordField.type = 'text';
-        eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>';
-    } else {
-        passwordField.type = 'password';
-        eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>';
-    }
-}
+  function togglePassword() {
+    const passwordField = document.getElementById("id_password");
+    const eyeIcon = document.getElementById("eye-icon");
 
-// Auto-focus username field
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('id_username').focus();
-});
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
+      eyeIcon.innerHTML =
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>';
+    } else {
+      passwordField.type = "password";
+      eyeIcon.innerHTML =
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>';
+    }
+  }
+
+  // Auto-focus username field
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("id_username").focus();
+  });
 </script>
 {% endblock %}

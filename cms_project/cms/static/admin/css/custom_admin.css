@@ -35,8 +35,7 @@
 }
 
 /* Checkbox and Radio Styling */
-input[type="checkbox"],
-input[type="radio"] {
+input[type="checkbox"], input[type="radio"] {
     width: 18px !important;
     height: 18px !important;
     cursor: pointer !important;
@@ -216,8 +215,7 @@ input[type="file"]:hover {
 }
 
 /* Calendar Widget */
-.calendarbox,
-.clockbox {
+.calendarbox, .clockbox {
     background: white !important;
     border: 2px solid #e5e7eb !important;
     border-radius: 8px !important;
@@ -261,11 +259,11 @@ input[type="file"]:hover {
     #searchbar {
         width: 100% !important;
     }
-
+    
     .dashboard-stats {
         grid-template-columns: 1fr !important;
     }
-
+    
     .action-grid {
         grid-template-columns: 1fr !important;
     }
@@ -291,9 +289,7 @@ input[type="file"]:hover {
 }
 
 @keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+    to { transform: rotate(360deg); }
 }
 
 /* Success/Error Message Enhancement */
@@ -387,7 +383,6 @@ fieldset.collapsed {
 
 /* Print Styles */
 @media print {
-
     .dashboard-welcome,
     .quick-actions,
     .dashboard-stats {
