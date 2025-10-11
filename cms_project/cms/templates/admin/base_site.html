@@ -1,0 +1,337 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | MarkCMS Admin{% endblock %}
+
+{% block branding %}
+<div id="site-name" style="padding: 15px 20px; display: flex; align-items: center; gap: 12px;">
+    <svg style="width: 32px; height: 32px; color: #a855f7;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+    </svg>
+    <a href="{% url 'admin:index' %}" style="color: #1f2937; text-decoration: none; font-size: 24px; font-weight: 700;">
+        MarkCMS <span style="font-weight: 400; color: #6b7280; font-size: 16px;">Admin</span>
+    </a>
+</div>
+{% endblock %}
+
+{% block nav-global %}
+<div style="padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; gap: 20px; align-items: center;">
+    <a href="/" target="_blank" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; padding: 8px 16px; background: rgba(255,255,255,0.2); border-radius: 8px; transition: all 0.2s;">
+        <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+        </svg>
+        View Site
+    </a>
+    <a href="/cheat-sheet/" target="_blank" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; padding: 8px 16px; background: rgba(255,255,255,0.2); border-radius: 8px; transition: all 0.2s;">
+        <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+        </svg>
+        Markdown Guide
+    </a>
+</div>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/custom_admin.css' %}">
+<style>
+    /* Modern Theme Colors */
+    :root {
+        --primary-color: #667eea;
+        --primary-dark: #5568d3;
+        --secondary-color: #764ba2;
+        --accent-color: #a855f7;
+        --success-color: #10b981;
+        --danger-color: #ef4444;
+        --text-dark: #1f2937;
+        --text-light: #6b7280;
+        --border-color: #e5e7eb;
+        --bg-light: #f9fafb;
+    }
+
+    /* Global Improvements */
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background: #f9fafb !important;
+    }
+
+    /* Header Styling */
+    #header {
+        background: white !important;
+        border-bottom: 2px solid #e5e7eb;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Breadcrumbs */
+    .breadcrumbs {
+        background: white !important;
+        padding: 12px 20px !important;
+        border-bottom: 1px solid #e5e7eb;
+        font-size: 13px;
+    }
+
+    .breadcrumbs a {
+        color: var(--primary-color) !important;
+        text-decoration: none;
+    }
+
+    .breadcrumbs a:hover {
+        color: var(--primary-dark) !important;
+        text-decoration: underline;
+    }
+
+    /* Content Area */
+    #content {
+        padding: 30px !important;
+    }
+
+    /* Module Headers */
+    .module h2, .module caption, .inline-group h2 {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+        color: white !important;
+        padding: 12px 16px !important;
+        border-radius: 8px 8px 0 0 !important;
+        font-weight: 600 !important;
+        font-size: 15px !important;
+    }
+
+    /* Modules/Boxes */
+    .module, .inline-group {
+        background: white !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 8px !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+        margin-bottom: 20px !important;
+    }
+
+    /* Dashboard Modules */
+    #content-main .module {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    #content-main .module:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    /* Forms */
+    .form-row {
+        padding: 16px !important;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .form-row:last-child {
+        border-bottom: none;
+    }
+
+    input[type="text"], input[type="password"], input[type="email"], 
+    input[type="url"], input[type="number"], textarea, select {
+        border: 2px solid var(--border-color) !important;
+        border-radius: 8px !important;
+        padding: 10px 12px !important;
+        font-size: 14px !important;
+        transition: all 0.2s !important;
+    }
+
+    input[type="text"]:focus, input[type="password"]:focus, 
+    input[type="email"]:focus, textarea:focus, select:focus {
+        border-color: var(--primary-color) !important;
+        outline: none !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    }
+
+    textarea {
+        font-family: 'Courier New', monospace !important;
+        line-height: 1.6 !important;
+    }
+
+    /* Buttons */
+    .button, input[type="submit"], input[type="button"], .submit-row input {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+        border: none !important;
+        color: white !important;
+        padding: 10px 20px !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+        transition: all 0.2s !important;
+        font-size: 14px !important;
+    }
+
+    .button:hover, input[type="submit"]:hover, input[type="button"]:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3) !important;
+    }
+
+    .button.default, input[type="submit"].default {
+        background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-color) 100%) !important;
+    }
+
+    .deletelink, .deletelink-box {
+        background: var(--danger-color) !important;
+    }
+
+    /* Tables */
+    #result_list {
+        border: 1px solid var(--border-color) !important;
+        border-radius: 8px !important;
+        overflow: hidden;
+    }
+
+    #result_list thead th {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+        color: white !important;
+        padding: 12px !important;
+        border: none !important;
+        font-weight: 600 !important;
+    }
+
+    #result_list tbody tr {
+        border-bottom: 1px solid var(--border-color);
+        transition: background 0.2s;
+    }
+
+    #result_list tbody tr:hover {
+        background: var(--bg-light) !important;
+    }
+
+    #result_list tbody td {
+        padding: 12px !important;
+    }
+
+    /* Links */
+    a {
+        color: var(--primary-color) !important;
+        transition: color 0.2s;
+    }
+
+    a:hover {
+        color: var(--primary-dark) !important;
+    }
+
+    /* Submit Row */
+    .submit-row {
+        background: white !important;
+        padding: 16px !important;
+        border-top: 2px solid var(--border-color) !important;
+        border-radius: 0 0 8px 8px !important;
+    }
+
+    /* Object Tools */
+    .object-tools {
+        background: none !important;
+        padding: 0 !important;
+        margin-bottom: 20px !important;
+    }
+
+    .object-tools li {
+        background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-color) 100%) !important;
+        border-radius: 8px !important;
+        transition: transform 0.2s !important;
+    }
+
+    .object-tools li:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(168, 85, 247, 0.3) !important;
+    }
+
+    .object-tools a {
+        color: white !important;
+        padding: 10px 20px !important;
+        font-weight: 600 !important;
+    }
+
+    /* Pagination */
+    .paginator {
+        padding: 12px !important;
+        background: white !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 8px !important;
+        margin-top: 20px !important;
+    }
+
+    /* Dashboard */
+    .dashboard .module table {
+        border: none !important;
+    }
+
+    .dashboard .module th {
+        background: var(--bg-light) !important;
+        color: var(--text-dark) !important;
+        font-weight: 600 !important;
+        padding: 10px 12px !important;
+    }
+
+    /* Success Messages */
+    .success, .messagelist .success {
+        background: var(--success-color) !important;
+        color: white !important;
+        border-radius: 8px !important;
+        padding: 12px 16px !important;
+        border: none !important;
+    }
+
+    /* Error Messages */
+    .errors, .errorlist, .messagelist .error {
+        background: var(--danger-color) !important;
+        color: white !important;
+        border-radius: 8px !important;
+        padding: 12px 16px !important;
+        border: none !important;
+    }
+
+    /* Help Text */
+    .help, .helptext {
+        color: var(--text-light) !important;
+        font-size: 13px !important;
+        margin-top: 6px !important;
+    }
+
+    /* Login Page */
+    .login {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+    }
+
+    .login #content {
+        background: white !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    .login #header {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    .login #header h1 {
+        margin: 0 !important;
+    }
+
+    .login #header h1 a {
+        color: white !important;
+    }
+
+    /* Selector (for many-to-many, etc) */
+    .selector {
+        border: 1px solid var(--border-color) !important;
+        border-radius: 8px !important;
+        overflow: hidden;
+    }
+
+    .selector h2 {
+        background: var(--bg-light) !important;
+        color: var(--text-dark) !important;
+    }
+
+    /* Inline Forms */
+    .inline-related {
+        background: var(--bg-light) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 8px !important;
+        padding: 16px !important;
+        margin-bottom: 16px !important;
+    }
+</style>
+{% endblock %}

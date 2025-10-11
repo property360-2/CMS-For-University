@@ -1,0 +1,391 @@
+/* Additional Custom Styles for Django Admin */
+
+/* Markdown Textarea Enhancement */
+#id_content_md {
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace !important;
+    font-size: 14px !important;
+    line-height: 1.8 !important;
+    min-height: 500px !important;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 16px !important;
+    background: #f9fafb !important;
+}
+
+#id_content_md:focus {
+    background: white !important;
+    border-color: #a855f7 !important;
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1) !important;
+}
+
+/* Form Labels Enhancement */
+.form-row label {
+    font-weight: 600 !important;
+    color: #1f2937 !important;
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
+    display: inline-block !important;
+}
+
+/* Required Field Indicator */
+.form-row.required label:after {
+    content: " *";
+    color: #ef4444;
+    font-weight: 700;
+}
+
+/* Checkbox and Radio Styling */
+input[type="checkbox"], input[type="radio"] {
+    width: 18px !important;
+    height: 18px !important;
+    cursor: pointer !important;
+    accent-color: #a855f7 !important;
+}
+
+/* File Upload Styling */
+input[type="file"] {
+    border: 2px dashed #d1d5db !important;
+    padding: 20px !important;
+    border-radius: 8px !important;
+    background: #f9fafb !important;
+    cursor: pointer !important;
+}
+
+input[type="file"]:hover {
+    border-color: #a855f7 !important;
+    background: white !important;
+}
+
+/* Change List Actions */
+.actions {
+    background: white !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 16px !important;
+    margin-bottom: 20px !important;
+}
+
+.actions label {
+    font-weight: 600 !important;
+    margin-right: 12px !important;
+}
+
+.actions select {
+    border: 2px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 8px 12px !important;
+    margin-right: 12px !important;
+}
+
+.actions button {
+    background: linear-gradient(135deg, #a855f7 0%, #764ba2 100%) !important;
+    border: none !important;
+    color: white !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+}
+
+/* Filter Sidebar Enhancement */
+#changelist-filter {
+    background: white !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 0 !important;
+}
+
+#changelist-filter h2 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    padding: 12px 16px !important;
+    margin: 0 !important;
+    font-weight: 600 !important;
+    border-radius: 8px 8px 0 0 !important;
+}
+
+#changelist-filter h3 {
+    padding: 12px 16px !important;
+    background: #f9fafb !important;
+    margin: 0 !important;
+    font-weight: 600 !important;
+    color: #1f2937 !important;
+    border-bottom: 1px solid #e5e7eb !important;
+}
+
+#changelist-filter ul {
+    padding: 8px 0 !important;
+    margin: 0 !important;
+}
+
+#changelist-filter li {
+    padding: 8px 16px !important;
+    transition: background 0.2s !important;
+}
+
+#changelist-filter li:hover {
+    background: #f3f4f6 !important;
+}
+
+#changelist-filter a {
+    color: #4b5563 !important;
+    text-decoration: none !important;
+}
+
+#changelist-filter a:hover {
+    color: #a855f7 !important;
+}
+
+#changelist-filter li.selected a {
+    color: #a855f7 !important;
+    font-weight: 600 !important;
+}
+
+/* Search Bar Enhancement */
+#toolbar {
+    background: white !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 16px !important;
+    margin-bottom: 20px !important;
+}
+
+#searchbar {
+    border: 2px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+    width: 400px !important;
+    transition: all 0.2s !important;
+}
+
+#searchbar:focus {
+    border-color: #a855f7 !important;
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1) !important;
+    outline: none !important;
+}
+
+/* Date Hierarchy Enhancement */
+.xfull {
+    background: white !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+    margin-bottom: 20px !important;
+}
+
+.xfull a {
+    color: #667eea !important;
+    padding: 6px 12px !important;
+    border-radius: 6px !important;
+    transition: all 0.2s !important;
+    display: inline-block !important;
+}
+
+.xfull a:hover {
+    background: #f3f4f6 !important;
+    color: #a855f7 !important;
+}
+
+/* Inline Form Enhancements */
+.inline-related h3 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    padding: 10px 16px !important;
+    border-radius: 8px 8px 0 0 !important;
+    margin: 0 0 16px 0 !important;
+}
+
+.inline-group .tabular {
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+}
+
+/* Delete Confirmation */
+.delete-confirmation {
+    background: white !important;
+    border: 2px solid #ef4444 !important;
+    border-radius: 8px !important;
+    padding: 20px !important;
+}
+
+.delete-confirmation h2 {
+    color: #ef4444 !important;
+}
+
+/* Calendar Widget */
+.calendarbox, .clockbox {
+    background: white !important;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+.calendar caption {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+}
+
+.calendar td a:hover {
+    background: #a855f7 !important;
+}
+
+/* Related Widget Enhancement */
+.related-widget-wrapper {
+    display: flex !important;
+    gap: 8px !important;
+    align-items: center !important;
+}
+
+.related-widget-wrapper-link {
+    background: linear-gradient(135deg, #a855f7 0%, #764ba2 100%) !important;
+    color: white !important;
+    padding: 8px 12px !important;
+    border-radius: 6px !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    transition: all 0.2s !important;
+}
+
+.related-widget-wrapper-link:hover {
+    opacity: 0.9 !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Responsive Improvements */
+@media (max-width: 768px) {
+    #searchbar {
+        width: 100% !important;
+    }
+    
+    .dashboard-stats {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .action-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Loading Animation */
+.loading {
+    position: relative;
+}
+
+.loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #a855f7;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Success/Error Message Enhancement */
+.messagelist {
+    padding: 0 !important;
+    margin: 0 0 20px 0 !important;
+}
+
+.messagelist li {
+    padding: 12px 16px !important;
+    margin: 0 0 10px 0 !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.messagelist li::before {
+    content: "✓";
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.messagelist .error::before {
+    content: "✕";
+}
+
+.messagelist .warning::before {
+    content: "⚠";
+}
+
+/* Hover Effects for Table Rows */
+#result_list tbody tr {
+    cursor: pointer !important;
+}
+
+#result_list tbody tr:nth-child(even) {
+    background: #f9fafb !important;
+}
+
+#result_list tbody tr:nth-child(odd) {
+    background: white !important;
+}
+
+/* Admin Index Module Links */
+.dashboard .module table th a {
+    color: #1f2937 !important;
+    font-weight: 600 !important;
+}
+
+.dashboard .module table th a:hover {
+    color: #a855f7 !important;
+}
+
+.dashboard .module table td a {
+    padding: 6px 12px !important;
+    background: #f3f4f6 !important;
+    border-radius: 6px !important;
+    transition: all 0.2s !important;
+    display: inline-block !important;
+}
+
+.dashboard .module table td a:hover {
+    background: linear-gradient(135deg, #a855f7 0%, #764ba2 100%) !important;
+    color: white !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Fieldset Enhancement */
+fieldset {
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+fieldset.collapsed {
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+}
+
+.collapse-toggle {
+    color: #a855f7 !important;
+}
+
+/* Print Styles */
+@media print {
+    .dashboard-welcome,
+    .quick-actions,
+    .dashboard-stats {
+        display: none !important;
+    }
+}
