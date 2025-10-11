@@ -51,7 +51,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "cms_project.urls"
-
 # Find the TEMPLATES setting and update it
 TEMPLATES = [
     {
