@@ -1,0 +1,490 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    /* List View Enhancement */
+    .list-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .list-header h1 {
+        font-size: 28px;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .list-header .add-btn {
+        background: white;
+        color: #667eea;
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+    }
+
+    .list-header .add-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+    }
+
+    /* Filter and Search Section */
+    .controls-section {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        flex-wrap: wrap;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .search-wrapper {
+        flex: 1;
+        min-width: 300px;
+        position: relative;
+    }
+
+    #searchbar {
+        width: 100% !important;
+        padding: 12px 16px 12px 44px !important;
+        border: 2px solid #e5e7eb !important;
+        border-radius: 10px !important;
+        font-size: 14px !important;
+    }
+
+    .search-wrapper::before {
+        content: "🔍";
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 18px;
+    }
+
+    .filter-summary {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .filter-tag {
+        background: #f3f4f6;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        color: #374151;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .filter-tag.active {
+        background: linear-gradient(135deg, #a855f7 0%, #764ba2 100%);
+        color: white;
+    }
+
+    /* Table Enhancement */
+    .results-wrapper {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0 0, 0.05);
+    }
+
+    #result_list {
+        border: none !important;
+    }
+
+    #result_list thead th {
+        background: #f9fafb !important;
+        color: #1f2937 !important;
+        font-weight: 700 !important;
+        padding: 16px !important;
+        border-bottom: 2px solid #e5e7eb !important;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+    }
+
+    #result_list thead th a {
+        color: #1f2937 !important;
+        font-weight: 700 !important;
+    }
+
+    #result_list tbody td {
+        padding: 16px !important;
+        vertical-align: middle !important;
+    }
+
+    #result_list tbody tr {
+        border-bottom: 1px solid #f3f4f6 !important;
+        transition: all 0.2s !important;
+    }
+
+    #result_list tbody tr:hover {
+        background: #f9fafb !important;
+        transform: translateX(4px);
+    }
+
+    /* Status Badges */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .status-published {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-draft {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    /* Action Buttons */
+    .row-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .action-btn {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .action-edit {
+        background: #eff6ff;
+        color: #1e40af;
+        border: 1px solid #bfdbfe;
+    }
+
+    .action-edit:hover {
+        background: #1e40af;
+        color: white;
+    }
+
+    .action-view {
+        background: #f0fdf4;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+    }
+
+    .action-view:hover {
+        background: #166534;
+        color: white;
+    }
+
+    .action-delete {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fca5a5;
+    }
+
+    .action-delete:hover {
+        background: #991b1b;
+        color: white;
+    }
+
+    /* Pagination Enhancement */
+    .paginator {
+        background: white !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 12px !important;
+        padding: 16px 20px !important;
+        margin-top: 20px !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+
+    .paginator a {
+        padding: 8px 16px !important;
+        background: #f9fafb !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 6px !important;
+        color: #374151 !important;
+        text-decoration: none !important;
+        transition: all 0.2s !important;
+        font-weight: 500 !important;
+    }
+
+    .paginator a:hover {
+        background: linear-gradient(135deg, #a855f7 0%, #764ba2 100%) !important;
+        color: white !important;
+        border-color: #a855f7 !important;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border: 2px dashed #e5e7eb;
+        border-radius: 12px;
+    }
+
+    .empty-state-icon {
+        font-size: 64px;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+
+    .empty-state h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 12px;
+    }
+
+    .empty-state p {
+        color: #6b7280;
+        margin-bottom: 24px;
+    }
+
+    .empty-state .add-btn {
+        background: linear-gradient(135deg, #a855f7 0%, #764ba2 100%);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+    }
+
+    .empty-state .add-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(168, 85, 247, 0.3);
+    }
+
+    /* Date Hierarchy Pills */
+    .xfull {
+        background: white !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 12px !important;
+        padding: 12px 20px !important;
+        margin-bottom: 20px !important;
+        display: flex !important;
+        gap: 8px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .xfull a {
+        padding: 8px 16px !important;
+        background: #f9fafb !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 6px !important;
+        color: #374151 !important;
+        text-decoration: none !important;
+        transition: all 0.2s !important;
+        font-weight: 500 !important;
+        font-size: 13px !important;
+    }
+
+    .xfull a:hover {
+        background: linear-gradient(135deg, #a855f7 0%, #764ba2 100%) !important;
+        color: white !important;
+        border-color: #a855f7 !important;
+    }
+
+    /* Actions Dropdown */
+    .actions {
+        background: white !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 12px !important;
+        padding: 16px 20px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .actions select {
+        padding: 10px 16px !important;
+        border: 2px solid #e5e7eb !important;
+        border-radius: 8px !important;
+        font-size: 14px !important;
+        min-width: 200px !important;
+    }
+
+    .actions button[type="submit"] {
+        background: linear-gradient(135deg, #a855f7 0%, #764ba2 100%) !important;
+        color: white !important;
+        border: none !important;
+        padding: 10px 20px !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+        transition: all 0.2s !important;
+    }
+
+    .actions button[type="submit"]:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(168, 85, 247, 0.3) !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="list-header">
+    <div>
+        <h1>📄 {{ cl.opts.verbose_name_plural|capfirst }}</h1>
+        <p style="margin: 8px 0 0 0; opacity: 0.9; font-size: 14px;">
+            Manage all your content in one place
+        </p>
+    </div>
+    {% if has_add_permission %}
+    <a href="{% url cl.opts|admin_urlname:'add' %}" class="add-btn">
+        <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Add {{ cl.opts.verbose_name }}
+    </a>
+    {% endif %}
+</div>
+
+{% if cl.formset and cl.formset.errors %}
+    <div style="background: #fee2e2; border: 1px solid #fca5a5; border-radius: 12px; padding: 16px; margin-bottom: 20px; color: #991b1b;">
+        <strong>Please correct the errors below.</strong>
+    </div>
+{% endif %}
+
+{% block search %}
+{% if cl.search_fields %}
+<div class="controls-section">
+    <div class="search-wrapper">
+        <form id="changelist-search" method="get">
+            <input type="search" id="searchbar" name="{{ search_var }}" value="{{ cl.query }}" placeholder="Search {{ cl.opts.verbose_name_plural|lower }}...">
+            {% if cl.is_popup %}
+                <input type="hidden" name="_popup" value="1">
+            {% endif %}
+            {% for key, value in cl.params.items %}
+                {% if key != search_var %}
+                    <input type="hidden" name="{{ key }}" value="{{ value }}">
+                {% endif %}
+            {% endfor %}
+        </form>
+    </div>
+    
+    {% if cl.has_filters %}
+    <div class="filter-summary">
+        <span class="filter-tag">
+            <svg style="width: 14px; height: 14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+            </svg>
+            Filters Active
+        </span>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block date_hierarchy %}
+{% if cl.date_hierarchy %}
+    {% date_hierarchy cl %}
+{% endif %}
+{% endblock %}
+
+{% if action_form and actions_on_top and cl.show_admin_actions %}
+    {% admin_actions %}
+{% endif %}
+
+{% block result_list %}
+{% if cl.result_count %}
+<div class="results-wrapper">
+    {% result_list cl %}
+</div>
+
+{% if cl.result_count != cl.full_result_count %}
+    <p class="paginator" style="margin-top: 20px; padding: 12px; background: #fffbeb; border: 1px solid #fcd34d; border-radius: 8px; color: #92400e;">
+        <svg style="width: 16px; height: 16px; display: inline-block; vertical-align: middle;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        {% blocktrans with full_result_count=cl.full_result_count result_count=cl.result_count %}Note: Showing {{ result_count }} of {{ full_result_count }} results due to filtering.{% endblocktrans %}
+    </p>
+{% endif %}
+
+{% if cl.has_filters %}
+<script>
+document.querySelectorAll('#result_list tbody tr').forEach((row, index) => {
+    // Add status badges
+    const statusCell = row.querySelector('td.field-is_published');
+    if (statusCell) {
+        const isPublished = statusCell.textContent.trim().includes('✓') || statusCell.textContent.trim().toLowerCase().includes('yes');
+        const badge = document.createElement('span');
+        badge.className = isPublished ? 'status-badge status-published' : 'status-badge status-draft';
+        badge.innerHTML = isPublished ? '✓ Published' : '○ Draft';
+        statusCell.innerHTML = '';
+        statusCell.appendChild(badge);
+    }
+});
+</script>
+{% endif %}
+
+{% elif not cl.result_count and not cl.is_popup and cl.full_result_count %}
+<div class="empty-state">
+    <div class="empty-state-icon">🔍</div>
+    <h2>No results found</h2>
+    <p>Try adjusting your search or filters to find what you're looking for.</p>
+    <a href="?" class="add-btn">Clear all filters</a>
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="empty-state-icon">📝</div>
+    <h2>No pages yet</h2>
+    <p>Get started by creating your first page!</p>
+    {% if has_add_permission %}
+    <a href="{% url cl.opts|admin_urlname:'add' %}" class="add-btn">
+        <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Create First Page
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block pagination %}
+{% if cl.result_count %}
+    {% pagination cl %}
+{% endif %}
+{% endblock %}
+
+{% if action_form and actions_on_bottom and cl.show_admin_actions %}
+    {% admin_actions %}
+{% endif %}
+{% endblock %}

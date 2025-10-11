@@ -1,0 +1,542 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    /* Enhanced Form Page */
+    .change-form-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Form Header */
+    .form-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .form-header h1 {
+        font-size: 28px;
+        font-weight: 700;
+        margin: 0 0 8px 0;
+    }
+
+    .form-header .subtitle {
+        font-size: 14px;
+        opacity: 0.9;
+    }
+
+    /* Content Area */
+    .content-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 30px;
+    }
+
+    .main-content {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .sidebar-content {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        height: fit-content;
+        position: sticky;
+        top: 20px;
+    }
+
+    /* Form Sections */
+    .form-section {
+        padding: 24px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .form-section:last-child {
+        border-bottom: none;
+    }
+
+    .form-section h2 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1f2937;
+        margin: 0 0 20px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .form-section h2::before {
+        content: "";
+        width: 4px;
+        height: 24px;
+        background: linear-gradient(135deg, #a855f7 0%, #764ba2 100%);
+        border-radius: 2px;
+    }
+
+    /* Markdown Editor Enhancement */
+    .markdown-editor-wrapper {
+        position: relative;
+    }
+
+    .editor-toolbar {
+        display: flex;
+        gap: 8px;
+        padding: 12px;
+        background: #f9fafb;
+        border: 2px solid #e5e7eb;
+        border-bottom: none;
+        border-radius: 8px 8px 0 0;
+        flex-wrap: wrap;
+    }
+
+    .editor-btn {
+        padding: 8px 12px;
+        background: white;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 500;
+        color: #374151;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .editor-btn:hover {
+        background: #a855f7;
+        color: white;
+        border-color: #a855f7;
+        transform: translateY(-1px);
+    }
+
+    .editor-btn svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    #id_content_md {
+        border-radius: 0 0 8px 8px !important;
+        border-top: none !important;
+    }
+
+    /* Sidebar Sections */
+    .sidebar-section {
+        margin-bottom: 24px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .sidebar-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .sidebar-section h3 {
+        font-size: 14px;
+        font-weight: 700;
+        color: #1f2937;
+        margin: 0 0 12px 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .sidebar-info {
+        font-size: 13px;
+        color: #6b7280;
+        line-height: 1.6;
+    }
+
+    .sidebar-info strong {
+        color: #1f2937;
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    /* Help Tips */
+    .help-tip {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        padding: 12px;
+        margin-top: 16px;
+        font-size: 13px;
+        color: #1e40af;
+        display: flex;
+        gap: 10px;
+    }
+
+    .help-tip svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+    }
+
+    /* Quick Actions in Sidebar */
+    .quick-links {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .quick-link {
+        padding: 10px 12px;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #374151;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .quick-link:hover {
+        background: linear-gradient(135deg, #a855f7 0%, #764ba2 100%);
+        color: white;
+        border-color: #a855f7;
+        transform: translateX(4px);
+    }
+
+    .quick-link svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Submit Row Enhancement */
+    .submit-row {
+        position: sticky;
+        bottom: 0;
+        background: white !important;
+        padding: 20px 24px !important;
+        border-top: 2px solid #e5e7eb !important;
+        border-radius: 0 0 12px 12px !important;
+        display: flex !important;
+        gap: 12px !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        z-index: 10;
+    }
+
+    .submit-row input[type="submit"] {
+        margin: 0 !important;
+        padding: 12px 24px !important;
+        font-size: 15px !important;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .content-wrapper {
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar-content {
+            position: relative;
+            top: 0;
+        }
+    }
+
+    /* Character Counter */
+    .char-counter {
+        font-size: 12px;
+        color: #6b7280;
+        margin-top: 6px;
+        text-align: right;
+    }
+
+    .char-counter.warning {
+        color: #f59e0b;
+    }
+
+    .char-counter.error {
+        color: #ef4444;
+    }
+
+    /* Preview Button */
+    .preview-btn {
+        background: white !important;
+        border: 2px solid #a855f7 !important;
+        color: #a855f7 !important;
+    }
+
+    .preview-btn:hover {
+        background: #a855f7 !important;
+        color: white !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="change-form-container">
+    <div class="form-header">
+        <h1>
+            {% if add %}
+                ✨ Create New Page
+            {% else %}
+                ✏️ Edit: {{ original.title|default:"Page" }}
+            {% endif %}
+        </h1>
+        <div class="subtitle">
+            {% if add %}
+                Write amazing content with Markdown formatting
+            {% else %}
+                Last updated: {{ original.updated_at|date:"F d, Y at g:i A" }}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="main-content">
+            <form method="post" id="{{ opts.model_name }}_form" novalidate>
+                {% csrf_token %}
+                {% block form_top %}{% endblock %}
+
+                {% if errors %}
+                    <div class="form-section">
+                        <div style="background: #fee2e2; border: 1px solid #fca5a5; border-radius: 8px; padding: 16px; color: #991b1b;">
+                            <strong style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Please correct the errors below
+                            </strong>
+                            {{ errors }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Content Section -->
+                <div class="form-section">
+                    <h2>
+                        📝 Content
+                    </h2>
+                    
+                    {% for field in adminform.form %}
+                        {% if field.name == 'title' or field.name == 'slug' or field.name == 'content_md' or field.name == 'is_published' %}
+                            {% if field.name == 'content_md' %}
+                                <div class="markdown-editor-wrapper">
+                                    <div class="editor-toolbar">
+                                        <button type="button" class="editor-btn" onclick="insertMarkdown('**', '**', 'bold text')" title="Bold">
+                                            <strong>B</strong>
+                                        </button>
+                                        <button type="button" class="editor-btn" onclick="insertMarkdown('*', '*', 'italic text')" title="Italic">
+                                            <em>I</em>
+                                        </button>
+                                        <button type="button" class="editor-btn" onclick="insertMarkdown('## ', '', 'Heading')" title="Heading">
+                                            H
+                                        </button>
+                                        <button type="button" class="editor-btn" onclick="insertMarkdown('[', '](url)', 'link text')" title="Link">
+                                            🔗
+                                        </button>
+                                        <button type="button" class="editor-btn" onclick="insertMarkdown('```\n', '\n```', 'code')" title="Code Block">
+                                            &lt;/&gt;
+                                        </button>
+                                        <button type="button" class="editor-btn" onclick="insertMarkdown('- ', '', 'list item')" title="List">
+                                            ≡
+                                        </button>
+                                        <button type="button" class="editor-btn" onclick="insertMarkdown('> ', '', 'quote')" title="Quote">
+                                            "
+                                        </button>
+                                    </div>
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                        <div class="help">{{ field.help_text|safe }}</div>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <div class="form-row{% if field.errors %} errors{% endif %}">
+                                    {{ field.label_tag }}
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                        <div class="help">{{ field.help_text|safe }}</div>
+                                    {% endif %}
+                                    {% if field.errors %}
+                                        {{ field.errors }}
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <!-- SEO Section -->
+                <div class="form-section">
+                    <h2>
+                        🎯 SEO & Meta Information
+                    </h2>
+                    {% for field in adminform.form %}
+                        {% if field.name == 'seo_description' or field.name == 'seo_keywords' %}
+                            <div class="form-row{% if field.errors %} errors{% endif %}">
+                                {{ field.label_tag }}
+                                {{ field }}
+                                {% if field.name == 'seo_description' %}
+                                    <div class="char-counter" id="seo-counter">
+                                        <span id="char-count">0</span>/160 characters
+                                    </div>
+                                {% endif %}
+                                {% if field.help_text %}
+                                    <div class="help">{{ field.help_text|safe }}</div>
+                                {% endif %}
+                                {% if field.errors %}
+                                    {{ field.errors }}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    <div class="help-tip">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div>
+                            <strong>SEO Tips:</strong> Write a compelling description (150-160 chars) and use relevant keywords separated by commas.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="submit-row">
+                    <div style="display: flex; gap: 12px;">
+                        {% if adminform.model_admin.save_as %}
+                            <input type="submit" value="Save as new" name="_saveasnew">
+                        {% endif %}
+                        <input type="submit" value="Save and continue editing" name="_continue" class="preview-btn">
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        {% if adminform.model_admin.save_on_top %}
+                            <input type="submit" value="Save" name="_save">
+                        {% endif %}
+                        <input type="submit" value="Save and add another" name="_addanother" class="default">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar-content">
+            <div class="sidebar-section">
+                <h3>📚 Quick Links</h3>
+                <div class="quick-links">
+                    <a href="/cheat-sheet/" target="_blank" class="quick-link">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                        Markdown Guide
+                    </a>
+                    {% if not add %}
+                        <a href="{{ original.get_absolute_url }}" target="_blank" class="quick-link">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                            View on Site
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'admin:cms_page_changelist' %}" class="quick-link">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                        </svg>
+                        All Pages
+                    </a>
+                </div>
+            </div>
+
+            {% if not add %}
+            <div class="sidebar-section">
+                <h3>📊 Page Info</h3>
+                <div class="sidebar-info">
+                    <strong>Created:</strong>
+                    {{ original.created_at|date:"M d, Y" }}
+                </div>
+                <div class="sidebar-info">
+                    <strong>Last Modified:</strong>
+                    {{ original.updated_at|date:"M d, Y" }}
+                </div>
+                <div class="sidebar-info">
+                    <strong>Status:</strong>
+                    {% if original.is_published %}
+                        <span style="color: #10b981;">✓ Published</span>
+                    {% else %}
+                        <span style="color: #f59e0b;">○ Draft</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="sidebar-section">
+                <h3>💡 Writing Tips</h3>
+                <div class="sidebar-info">
+                    • Use headings to structure content<br>
+                    • Keep paragraphs short and scannable<br>
+                    • Add images with alt text<br>
+                    • Use bullet points for lists<br>
+                    • Include relevant keywords naturally
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Markdown insertion helper
+    function insertMarkdown(before, after, placeholder) {
+        const textarea = document.getElementById('id_content_md');
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const selectedText = textarea.value.substring(start, end) || placeholder;
+        const newText = before + selectedText + after;
+        
+        textarea.setRangeText(newText, start, end, 'select');
+        textarea.focus();
+    }
+
+    // Character counter for SEO description
+    const seoField = document.getElementById('id_seo_description');
+    const counter = document.getElementById('seo-counter');
+    const charCount = document.getElementById('char-count');
+
+    if (seoField && counter) {
+        function updateCounter() {
+            const length = seoField.value.length;
+            charCount.textContent = length;
+            
+            counter.classList.remove('warning', 'error');
+            if (length > 160) {
+                counter.classList.add('error');
+            } else if (length > 150) {
+                counter.classList.add('warning');
+            }
+        }
+
+        seoField.addEventListener('input', updateCounter);
+        updateCounter();
+    }
+
+    // Auto-save draft (optional)
+    let autoSaveTimeout;
+    const form = document.getElementById('page_form');
+    
+    if (form) {
+        form.addEventListener('input', () => {
+            clearTimeout(autoSaveTimeout);
+            // Could implement auto-save here
+        });
+    }
+</script>
+{% endblock %}

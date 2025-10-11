@@ -4,11 +4,14 @@ from django.utils import timezone
 from datetime import timedelta
 from .models import Page
 
-# Custom Admin Site
+# Custom Admin Site with custom templates
 class CustomAdminSite(AdminSite):
     site_header = 'MarkCMS Administration'
     site_title = 'MarkCMS Admin'
     index_title = 'Dashboard'
+    
+    # Override index template
+    index_template = 'admin/index.html'
     
     def index(self, request, extra_context=None):
         # Add statistics to context
@@ -33,8 +36,12 @@ class CustomAdminSite(AdminSite):
 # Create custom admin site instance
 admin_site = CustomAdminSite(name='custom_admin')
 
+# Page Admin Configuration
 @admin.register(Page, site=admin_site)
 class PageAdmin(admin.ModelAdmin):
+    change_form_template = 'admin/change_form.html'
+    change_list_template = 'admin/change_list.html'
+    
     list_display = ('title', 'slug', 'is_published', 'created_at', 'updated_at')
     list_filter = ('is_published', 'created_at', 'updated_at')
     search_fields = ('title', 'content_md', 'seo_description', 'seo_keywords')
