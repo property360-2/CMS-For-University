@@ -1,0 +1,267 @@
+{% extends "cms/base.html" %}
+
+{% block title %}Markdown Cheat Sheet - MarkCMS{% endblock %}
+{% block description %}Complete guide to Markdown syntax for MarkCMS{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto fade-in">
+    <!-- Header -->
+    <div class="text-center mb-12">
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full mb-6">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+        </div>
+        <h1 class="text-5xl font-bold mb-4">Markdown Cheat Sheet</h1>
+        <p class="text-xl text-secondary max-w-2xl mx-auto">
+            Learn how to format your content using Markdown syntax
+        </p>
+    </div>
+
+    <!-- Quick Reference Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        <!-- Headings -->
+        <div class="bg-secondary border border-custom rounded-xl p-6 card-hover">
+            <h2 class="text-2xl font-bold mb-4 flex items-center accent-color">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                </svg>
+                Headings
+            </h2>
+            <div class="space-y-3">
+                <div class="bg-primary border border-custom rounded-lg p-3">
+                    <code class="text-accent"># Heading 1</code>
+                    <p class="text-sm text-secondary mt-1">Largest heading</p>
+                </div>
+                <div class="bg-primary border border-custom rounded-lg p-3">
+                    <code class="text-accent">## Heading 2</code>
+                </div>
+                <div class="bg-primary border border-custom rounded-lg p-3">
+                    <code class="text-accent">### Heading 3</code>
+                </div>
+                <div class="bg-primary border border-custom rounded-lg p-3">
+                    <code class="text-accent">#### Heading 4</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Text Formatting -->
+        <div class="bg-secondary border border-custom rounded-xl p-6 card-hover">
+            <h2 class="text-2xl font-bold mb-4 flex items-center accent-color">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+                Text Formatting
+            </h2>
+            <div class="space-y-3">
+                <div class="bg-primary border border-custom rounded-lg p-3">
+                    <code class="text-accent">**Bold text**</code>
+                    <p class="text-sm text-secondary mt-1">Makes text <strong>bold</strong></p>
+                </div>
+                <div class="bg-primary border border-custom rounded-lg p-3">
+                    <code class="text-accent">*Italic text*</code>
+                    <p class="text-sm text-secondary mt-1">Makes text <em>italic</em></p>
+                </div>
+                <div class="bg-primary border border-custom rounded-lg p-3">
+                    <code class="text-accent">~~Strikethrough~~</code>
+                    <p class="text-sm text-secondary mt-1">Strikes through text</p>
+                </div>
+                <div class="bg-primary border border-custom rounded-lg p-3">
+                    <code class="text-accent">`inline code`</code>
+                    <p class="text-sm text-secondary mt-1">For code snippets</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lists -->
+        <div class="bg-secondary border border-custom rounded-xl p-6 card-hover">
+            <h2 class="text-2xl font-bold mb-4 flex items-center accent-color">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                </svg>
+                Lists
+            </h2>
+            <div class="space-y-3">
+                <div class="bg-primary border border-custom rounded-lg p-3">
+                    <p class="text-sm font-medium mb-2">Unordered List:</p>
+                    <pre class="text-accent text-sm">- Item 1
+- Item 2
+  - Nested item</pre>
+                </div>
+                <div class="bg-primary border border-custom rounded-lg p-3">
+                    <p class="text-sm font-medium mb-2">Ordered List:</p>
+                    <pre class="text-accent text-sm">1. First item
+2. Second item
+3. Third item</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Links & Images -->
+        <div class="bg-secondary border border-custom rounded-xl p-6 card-hover">
+            <h2 class="text-2xl font-bold mb-4 flex items-center accent-color">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                </svg>
+                Links & Images
+            </h2>
+            <div class="space-y-3">
+                <div class="bg-primary border border-custom rounded-lg p-3">
+                    <code class="text-accent">[Link text](https://example.com)</code>
+                    <p class="text-sm text-secondary mt-1">Create hyperlinks</p>
+                </div>
+                <div class="bg-primary border border-custom rounded-lg p-3">
+                    <code class="text-accent">![Alt text](image-url.jpg)</code>
+                    <p class="text-sm text-secondary mt-1">Embed images</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Advanced Syntax -->
+    <div class="bg-secondary border border-custom rounded-xl p-8 mb-12">
+        <h2 class="text-3xl font-bold mb-6 flex items-center">
+            <svg class="w-8 h-8 mr-3 accent-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+            </svg>
+            Advanced Syntax
+        </h2>
+
+        <div class="grid gap-6">
+            <!-- Code Blocks -->
+            <div>
+                <h3 class="text-xl font-semibold mb-3 accent-color">Code Blocks</h3>
+                <div class="bg-primary border border-custom rounded-lg p-4">
+                    <pre class="text-accent">```python
+def hello_world():
+    print("Hello, World!")
+```</pre>
+                    <p class="text-sm text-secondary mt-3">Use triple backticks with language name for syntax highlighting</p>
+                </div>
+            </div>
+
+            <!-- Blockquotes -->
+            <div>
+                <h3 class="text-xl font-semibold mb-3 accent-color">Blockquotes</h3>
+                <div class="bg-primary border border-custom rounded-lg p-4">
+                    <pre class="text-accent">> This is a blockquote
+> It can span multiple lines</pre>
+                    <p class="text-sm text-secondary mt-3">Use > for quotes</p>
+                </div>
+            </div>
+
+            <!-- Horizontal Rules -->
+            <div>
+                <h3 class="text-xl font-semibold mb-3 accent-color">Horizontal Rules</h3>
+                <div class="bg-primary border border-custom rounded-lg p-4">
+                    <pre class="text-accent">---</pre>
+                    <p class="text-sm text-secondary mt-3">Creates a horizontal line separator</p>
+                </div>
+            </div>
+
+            <!-- Tables -->
+            <div>
+                <h3 class="text-xl font-semibold mb-3 accent-color">Tables</h3>
+                <div class="bg-primary border border-custom rounded-lg p-4">
+                    <pre class="text-accent">| Header 1 | Header 2 |
+|----------|----------|
+| Cell 1   | Cell 2   |
+| Cell 3   | Cell 4   |</pre>
+                    <p class="text-sm text-secondary mt-3">Create tables with pipes and dashes</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Examples -->
+    <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-8 text-white mb-12">
+        <h2 class="text-3xl font-bold mb-4 flex items-center">
+            <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+            </svg>
+            Live Example
+        </h2>
+        <p class="mb-6 text-lg opacity-90">Here's how a formatted page looks:</p>
+        <div class="bg-white bg-opacity-10 backdrop-blur rounded-xl p-6 border border-white border-opacity-20">
+            <div class="prose max-w-none text-white">
+                <h1 style="color: white;">Welcome to My Page</h1>
+                <p style="color: rgba(255,255,255,0.9);">This is a <strong>bold statement</strong> with some <em>italic text</em>.</p>
+                <h2 style="color: white;">Features</h2>
+                <ul style="color: rgba(255,255,255,0.9);">
+                    <li>Easy to write</li>
+                    <li>Beautiful output</li>
+                    <li>Supports code blocks</li>
+                </ul>
+                <p style="color: rgba(255,255,255,0.9);">Check out <a href="#" style="color: #60a5fa; text-decoration: underline;">this link</a> for more info!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tips -->
+    <div class="bg-secondary border border-custom rounded-xl p-8">
+        <h2 class="text-3xl font-bold mb-6 flex items-center">
+            <svg class="w-8 h-8 mr-3 accent-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+            Pro Tips
+        </h2>
+        <div class="grid md:grid-cols-2 gap-4">
+            <div class="bg-primary border border-custom rounded-lg p-4">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                        <span class="text-white font-bold">1</span>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-1">Preview Before Publishing</h4>
+                        <p class="text-sm text-secondary">Always check how your markdown renders before publishing</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-primary border border-custom rounded-lg p-4">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                        <span class="text-white font-bold">2</span>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-1">Use Headings Wisely</h4>
+                        <p class="text-sm text-secondary">Structure your content with proper heading hierarchy</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-primary border border-custom rounded-lg p-4">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                        <span class="text-white font-bold">3</span>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-1">Add Alt Text to Images</h4>
+                        <p class="text-sm text-secondary">Makes your content accessible and improves SEO</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-primary border border-custom rounded-lg p-4">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                        <span class="text-white font-bold">4</span>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-1">Keep It Simple</h4>
+                        <p class="text-sm text-secondary">Markdown is meant to be readable - don't overdo formatting</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="text-center mt-12">
+        <a href="/admin/" class="inline-flex items-center px-8 py-4 accent-bg text-white rounded-xl hover:opacity-90 transition font-semibold text-lg shadow-lg">
+            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+            </svg>
+            Start Writing Now
+        </a>
+    </div>
+</div>
+{% endblock %}
